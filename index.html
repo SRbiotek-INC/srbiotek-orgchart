@@ -30,7 +30,10 @@
   .campus-gwangyo .campus-name { color: #3a9068; }
   .campus-seongnam .campus-name { color: #c4763a; }
   .campus-leader { font-size: 11px; font-weight: 600; color: #555; }
-  .dept-card { border-radius: 10px; overflow: hidden; }
+
+  /* 부서 카드 */
+  .dept-card { border-radius: 10px; overflow: hidden; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; }
+  .dept-card:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.12); }
   .dept-head { padding: 7px 10px; text-align: center; }
   .dept-head .dept-kr { font-size: 11px; font-weight: 700; line-height: 1.35; }
   .dept-head .dept-en { font-size: 9px; font-weight: 400; opacity: 0.75; line-height: 1.3; margin-top: 1px; }
@@ -39,6 +42,71 @@
   .staff-name { font-weight: 600; color: #3d3d5c; }
   .staff-rank { font-weight: 400; color: #888; }
   .staff-star { font-size: 10px; }
+
+  /* 팝업 오버레이 */
+  .modal-overlay {
+    display: none;
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px;
+    width: 480px;
+    max-width: 90vw;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+    position: relative;
+  }
+  .modal-close {
+    position: absolute; top: 16px; right: 18px;
+    font-size: 20px; color: #aaa; cursor: pointer; background: none; border: none;
+  }
+  .modal-close:hover { color: #555; }
+  .modal-dept-title {
+    font-size: 16px; font-weight: 700; color: #3d3d5c;
+    margin-bottom: 16px; padding-bottom: 12px;
+    border-bottom: 2px solid #ece9f1;
+  }
+  .modal-person {
+    background: #f8f7ff;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+  .modal-person-header {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 8px;
+  }
+  .modal-person-name { font-size: 15px; font-weight: 700; color: #3d3d5c; }
+  .modal-person-rank {
+    font-size: 11px; color: #fff; background: #6c63b6;
+    border-radius: 20px; padding: 2px 9px; font-weight: 500;
+  }
+  .modal-person-rank.leader { background: #f59e0b; }
+  .modal-info-row {
+    display: flex; align-items: flex-start; gap: 8px;
+    font-size: 12px; color: #555; margin-bottom: 4px; line-height: 1.5;
+  }
+  .modal-info-label {
+    font-weight: 600; color: #6c63b6; min-width: 44px; flex-shrink: 0;
+  }
+  .modal-info-value { color: #444; }
+  .modal-rr {
+    margin-top: 8px; padding-top: 8px;
+    border-top: 1px solid #e5e1f5;
+    font-size: 11px; color: #555; line-height: 1.7;
+  }
+  .modal-rr-label { font-weight: 700; color: #3d3d5c; margin-bottom: 4px; font-size: 12px; }
+  .loading { text-align: center; color: #aaa; font-size: 13px; padding: 20px; }
+
+  /* 테마 */
   .theme-strategic .dept-head { background: #c8bbf5; }
   .theme-strategic .dept-head .dept-kr { color: #3b2d7a; }
   .theme-strategic .dept-head .dept-en { color: #5a4aa0; }
@@ -104,191 +172,307 @@
 </style>
 </head>
 <body>
-  <div class="logo-row">
-    <span class="logo-text">SR biotek</span>
-    <span class="logo-sub">Organization Chart</span>
+
+<!-- 팝업 -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    <div class="modal-dept-title" id="modalTitle"></div>
+    <div id="modalContent"><div class="loading">불러오는 중...</div></div>
   </div>
-  <hr class="divider">
-  <div class="exec-row">
-    <div class="exec-side">
-      <div class="exec-mini"><div class="role">연구총괄 CSO</div><div class="name">송병호</div></div>
-      <div class="exec-mini"><div class="role">사내이사</div><div class="name">박현석 이사</div></div>
-    </div>
-    <div class="ceo-card"><div class="role">CEO</div><div class="name">이소형</div></div>
+</div>
+
+<div class="logo-row">
+  <span class="logo-text">SR biotek</span>
+  <span class="logo-sub">Organization Chart</span>
+</div>
+<hr class="divider">
+
+<div class="exec-row">
+  <div class="exec-side">
+    <div class="exec-mini"><div class="role">연구총괄 CSO</div><div class="name">송병호</div></div>
+    <div class="exec-mini"><div class="role">사내이사</div><div class="name">박현석 이사</div></div>
   </div>
-  <div class="campuses">
-    <!-- 강남 -->
-    <div class="campus campus-gangnam" style="flex:2.2;">
-      <div class="campus-header"><div class="campus-name">강남 CAMPUS</div><div class="campus-leader">이소형 대표</div></div>
-      <div style="display:flex;gap:8px;margin-bottom:8px;">
-        <div class="dept-card theme-strategic" style="flex:1.8;">
-          <div class="dept-head"><div class="dept-kr">전략</div><div class="dept-en">Strategic</div></div>
-          <div class="dept-staff">
-            <div class="staff-item"><span class="staff-name">노서희</span><span class="staff-rank">_대리</span><span class="staff-star">⭐</span></div>
-            <div class="staff-item"><span class="staff-name">김예빈</span><span class="staff-rank">_사원</span></div>
-            <div class="staff-item"><span class="staff-name">이은지</span><span class="staff-rank">_사원</span></div>
-            <div class="staff-item"><span class="staff-name">곽윤서</span><span class="staff-rank">_대리</span></div>
-            <div class="staff-item"><span class="staff-name">왕자문</span><span class="staff-rank">_사원</span></div>
-            <div class="staff-item"><span class="staff-name">엄다혜</span><span class="staff-rank">_사원</span></div>
-            <div class="staff-item"><span class="staff-name">조은비</span><span class="staff-rank">_인턴</span></div>
-            <div class="staff-item"><span class="staff-name">박지인</span><span class="staff-rank">_인턴</span></div>
-          </div>
-        </div>
-        <div class="dept-card theme-hr" style="flex:1;">
-          <div class="dept-head"><div class="dept-kr">인사</div><div class="dept-en">Human Resource</div></div>
-          <div class="dept-staff">
-            <div class="staff-item"><span class="staff-name">김석원</span><span class="staff-rank">_과장</span><span class="staff-star">⭐</span></div>
-            <div class="staff-item"><span class="staff-name">이아라</span><span class="staff-rank">_과장</span></div>
-          </div>
-        </div>
-        <div class="dept-card theme-finance" style="flex:1;">
-          <div class="dept-head"><div class="dept-kr">재무</div><div class="dept-en">Finance</div></div>
-          <div class="dept-staff">
-            <div class="staff-item"><span class="staff-name">고대진</span><span class="staff-rank">_부장</span><span class="staff-star">⭐</span></div>
-            <div class="staff-item"><span class="staff-name">김나리</span><span class="staff-rank">_대리</span></div>
-          </div>
+  <div class="ceo-card"><div class="role">CEO</div><div class="name">이소형</div></div>
+</div>
+
+<div class="campuses">
+  <!-- 강남 -->
+  <div class="campus campus-gangnam" style="flex:2.2;">
+    <div class="campus-header"><div class="campus-name">강남 CAMPUS</div><div class="campus-leader">이소형 대표</div></div>
+    <div style="display:flex;gap:8px;margin-bottom:8px;">
+      <div class="dept-card theme-strategic" style="flex:1.8;" onclick="openModal('전략','Strategic')">
+        <div class="dept-head"><div class="dept-kr">전략</div><div class="dept-en">Strategic</div></div>
+        <div class="dept-staff">
+          <div class="staff-item"><span class="staff-name">노서희</span><span class="staff-rank">_대리</span><span class="staff-star">⭐</span></div>
+          <div class="staff-item"><span class="staff-name">김예빈</span><span class="staff-rank">_사원</span></div>
+          <div class="staff-item"><span class="staff-name">이은지</span><span class="staff-rank">_사원</span></div>
+          <div class="staff-item"><span class="staff-name">곽윤서</span><span class="staff-rank">_대리</span></div>
+          <div class="staff-item"><span class="staff-name">왕자문</span><span class="staff-rank">_사원</span></div>
+          <div class="staff-item"><span class="staff-name">엄다혜</span><span class="staff-rank">_사원</span></div>
+          <div class="staff-item"><span class="staff-name">조은비</span><span class="staff-rank">_인턴</span></div>
+          <div class="staff-item"><span class="staff-name">박지인</span><span class="staff-rank">_인턴</span></div>
         </div>
       </div>
-      <div style="display:flex;gap:8px;margin-bottom:8px;">
-        <div class="dept-card theme-brand" style="flex:1.5;">
-          <div class="dept-head"><div class="dept-kr">브랜드 매니지먼트팀</div><div class="dept-en">Brand Management</div></div>
-          <div class="dept-staff">
-            <div class="staff-item"><span class="staff-name">최희정</span><span class="staff-rank">_부장</span><span class="staff-star">⭐</span></div>
-            <div class="staff-item"><span class="staff-name">김윤지</span><span class="staff-rank">_과장</span></div>
-            <div class="staff-item"><span class="staff-name">박나리</span><span class="staff-rank">_과장</span></div>
-            <div class="staff-item"><span class="staff-name">김윤서</span><span class="staff-rank">_대리</span></div>
-            <div class="staff-item"><span class="staff-name">정선아</span><span class="staff-rank">_대리</span></div>
-            <div class="staff-item"><span class="staff-name">정슬기</span><span class="staff-rank">_대리</span></div>
-          </div>
-        </div>
-        <div class="dept-card theme-ops" style="flex:1;">
-          <div class="dept-head"><div class="dept-kr">운영지원</div><div class="dept-en">Operations Support</div></div>
-          <div class="dept-staff">
-            <div class="staff-item"><span class="staff-name">김아리</span><span class="staff-rank">_부대표</span><span class="staff-star">⭐</span></div>
-            <div class="staff-item"><span class="staff-name">박서현</span><span class="staff-rank">_사원</span></div>
-          </div>
+      <div class="dept-card theme-hr" style="flex:1;" onclick="openModal('인사','Human Resource')">
+        <div class="dept-head"><div class="dept-kr">인사</div><div class="dept-en">Human Resource</div></div>
+        <div class="dept-staff">
+          <div class="staff-item"><span class="staff-name">김석원</span><span class="staff-rank">_과장</span><span class="staff-star">⭐</span></div>
+          <div class="staff-item"><span class="staff-name">이아라</span><span class="staff-rank">_과장</span></div>
         </div>
       </div>
-      <div style="display:flex;gap:8px;">
-        <div class="dept-card theme-sales" style="flex:1;">
-          <div class="dept-head"><div class="dept-kr">SALES 1팀</div><div class="dept-en">Sales Team 1</div></div>
-          <div class="dept-staff">
-            <div class="staff-item"><span class="staff-name">김아리</span><span class="staff-rank">_부대표</span><span class="staff-star">⭐</span></div>
-            <div class="staff-item"><span class="staff-name">유지원</span><span class="staff-rank">_대리</span></div>
-            <div class="staff-item"><span class="staff-name">박상은</span><span class="staff-rank">_대리</span></div>
-          </div>
-        </div>
-        <div class="dept-card theme-sales" style="flex:1;">
-          <div class="dept-head"><div class="dept-kr">SALES 2팀</div><div class="dept-en">Sales Team 2</div></div>
-          <div class="dept-staff">
-            <div class="staff-item"><span class="staff-name">임다정</span><span class="staff-rank">_과장</span><span class="staff-star">⭐</span></div>
-            <div class="staff-item"><span class="staff-name">이미연</span><span class="staff-rank">_사원</span></div>
-          </div>
-        </div>
-        <div class="dept-card theme-sales" style="flex:1;">
-          <div class="dept-head"><div class="dept-kr">SALES 3팀</div><div class="dept-en">Sales Team 3</div></div>
-          <div class="dept-staff">
-            <div class="staff-item"><span class="staff-name">베카</span><span class="staff-rank">_과장</span><span class="staff-star">⭐</span></div>
-            <div class="staff-item"><span class="staff-name">박지희</span><span class="staff-rank">_대리</span></div>
-          </div>
+      <div class="dept-card theme-finance" style="flex:1;" onclick="openModal('재무','Finance')">
+        <div class="dept-head"><div class="dept-kr">재무</div><div class="dept-en">Finance</div></div>
+        <div class="dept-staff">
+          <div class="staff-item"><span class="staff-name">고대진</span><span class="staff-rank">_부장</span><span class="staff-star">⭐</span></div>
+          <div class="staff-item"><span class="staff-name">김나리</span><span class="staff-rank">_대리</span></div>
         </div>
       </div>
     </div>
-    <!-- 광교 -->
-    <div class="campus campus-gwangyo" style="flex:1;">
-      <div class="campus-header"><div class="campus-name">광교 CAMPUS</div><div class="campus-leader">박가민 부장 (센터장)</div></div>
-      <div style="display:flex;flex-direction:column;gap:8px;">
-        <div class="dept-card theme-bio">
-          <div class="dept-head"><div class="dept-kr">신소재 개발 Bio Center</div><div class="dept-en">New Material Development</div></div>
+    <div style="display:flex;gap:8px;margin-bottom:8px;">
+      <div class="dept-card theme-brand" style="flex:1.5;" onclick="openModal('브랜드 매니지먼트팀','Brand Management')">
+        <div class="dept-head"><div class="dept-kr">브랜드 매니지먼트팀</div><div class="dept-en">Brand Management</div></div>
+        <div class="dept-staff">
+          <div class="staff-item"><span class="staff-name">최희정</span><span class="staff-rank">_부장</span><span class="staff-star">⭐</span></div>
+          <div class="staff-item"><span class="staff-name">김윤지</span><span class="staff-rank">_과장</span></div>
+          <div class="staff-item"><span class="staff-name">박나리</span><span class="staff-rank">_과장</span></div>
+          <div class="staff-item"><span class="staff-name">김윤서</span><span class="staff-rank">_대리</span></div>
+          <div class="staff-item"><span class="staff-name">정선아</span><span class="staff-rank">_대리</span></div>
+          <div class="staff-item"><span class="staff-name">정슬기</span><span class="staff-rank">_대리</span></div>
+        </div>
+      </div>
+      <div class="dept-card theme-ops" style="flex:1;" onclick="openModal('운영지원','Operations Support')">
+        <div class="dept-head"><div class="dept-kr">운영지원</div><div class="dept-en">Operations Support</div></div>
+        <div class="dept-staff">
+          <div class="staff-item"><span class="staff-name">김아리</span><span class="staff-rank">_부대표</span><span class="staff-star">⭐</span></div>
+          <div class="staff-item"><span class="staff-name">박서현</span><span class="staff-rank">_사원</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <div class="dept-card theme-sales" style="flex:1;" onclick="openModal('SALES 1팀','Sales Team 1')">
+        <div class="dept-head"><div class="dept-kr">SALES 1팀</div><div class="dept-en">Sales Team 1</div></div>
+        <div class="dept-staff">
+          <div class="staff-item"><span class="staff-name">김아리</span><span class="staff-rank">_부대표</span><span class="staff-star">⭐</span></div>
+          <div class="staff-item"><span class="staff-name">유지원</span><span class="staff-rank">_대리</span></div>
+          <div class="staff-item"><span class="staff-name">박상은</span><span class="staff-rank">_대리</span></div>
+        </div>
+      </div>
+      <div class="dept-card theme-sales" style="flex:1;" onclick="openModal('SALES 2팀','Sales Team 2')">
+        <div class="dept-head"><div class="dept-kr">SALES 2팀</div><div class="dept-en">Sales Team 2</div></div>
+        <div class="dept-staff">
+          <div class="staff-item"><span class="staff-name">임다정</span><span class="staff-rank">_과장</span><span class="staff-star">⭐</span></div>
+          <div class="staff-item"><span class="staff-name">이미연</span><span class="staff-rank">_사원</span></div>
+        </div>
+      </div>
+      <div class="dept-card theme-sales" style="flex:1;" onclick="openModal('SALES 3팀','Sales Team 3')">
+        <div class="dept-head"><div class="dept-kr">SALES 3팀</div><div class="dept-en">Sales Team 3</div></div>
+        <div class="dept-staff">
+          <div class="staff-item"><span class="staff-name">베카</span><span class="staff-rank">_과장</span><span class="staff-star">⭐</span></div>
+          <div class="staff-item"><span class="staff-name">박지희</span><span class="staff-rank">_대리</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 광교 -->
+  <div class="campus campus-gwangyo" style="flex:1;">
+    <div class="campus-header"><div class="campus-name">광교 CAMPUS</div><div class="campus-leader">박가민 부장 (센터장)</div></div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div class="dept-card theme-bio" onclick="openModal('Bio Center','신소재 개발')">
+        <div class="dept-head"><div class="dept-kr">신소재 개발 Bio Center</div><div class="dept-en">New Material Development</div></div>
+        <div class="dept-staff">
+          <div class="staff-item"><span class="staff-name">박가민</span><span class="staff-rank">_부장(센터장)</span><span class="staff-star">⭐</span></div>
+          <div class="staff-item"><span class="staff-name">정윤조</span><span class="staff-rank">_책임연구원</span></div>
+          <div class="staff-item"><span class="staff-name">박찬후</span><span class="staff-rank">_연구원</span></div>
+          <div class="staff-item"><span class="staff-name">윤홍건</span><span class="staff-rank">_연구원</span></div>
+        </div>
+      </div>
+      <div class="dept-card theme-altum" onclick="openModal('알텀공장','Altum Plant')">
+        <div class="dept-head"><div class="dept-kr">알텀공장</div><div class="dept-en">Altum Plant</div></div>
+        <div class="dept-staff">
+          <div class="staff-item"><span class="staff-name">김동수</span><span class="staff-rank">_사원</span></div>
+          <div class="staff-item"><span class="staff-name">여인경</span><span class="staff-rank">_과장</span></div>
+          <div class="staff-item"><span class="staff-name">이우림</span><span class="staff-rank">_사원</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 성남 -->
+  <div class="campus campus-seongnam" style="flex:1.6;">
+    <div class="campus-header"><div class="campus-name">성남 CAMPUS</div><div class="campus-leader">김아리 부대표</div></div>
+    <div style="display:flex;gap:8px;">
+      <div style="display:flex;flex-direction:column;gap:8px;flex:1;">
+        <div class="dept-card theme-rnd" onclick="openModal('제형연구','Research & Development')">
+          <div class="dept-head"><div class="dept-kr">제형연구</div><div class="dept-en">Research &amp; Development</div></div>
           <div class="dept-staff">
-            <div class="staff-item"><span class="staff-name">박가민</span><span class="staff-rank">_부장(센터장)</span><span class="staff-star">⭐</span></div>
-            <div class="staff-item"><span class="staff-name">정윤조</span><span class="staff-rank">_책임연구원</span></div>
-            <div class="staff-item"><span class="staff-name">박찬후</span><span class="staff-rank">_연구원</span></div>
+            <div class="staff-item"><span class="staff-name">김아리</span><span class="staff-rank">_부대표</span><span class="staff-star">⭐</span></div>
+            <div class="staff-item"><span class="staff-name">김지아</span><span class="staff-rank">_책임연구원</span></div>
+            <div class="staff-item"><span class="staff-name">박진하</span><span class="staff-rank">_책임연구원</span></div>
             <div class="staff-item"><span class="staff-name">윤홍건</span><span class="staff-rank">_연구원</span></div>
           </div>
         </div>
-        <div class="dept-card theme-altum">
-          <div class="dept-head"><div class="dept-kr">알텀공장</div><div class="dept-en">Altum Plant</div></div>
+        <div class="dept-card theme-mgmt" onclick="openModal('생산관리','Manufacture Management')">
+          <div class="dept-head"><div class="dept-kr">생산관리</div><div class="dept-en">Manufacture Management</div></div>
           <div class="dept-staff">
-            <div class="staff-item"><span class="staff-name">김동수</span><span class="staff-rank">_사원</span></div>
-            <div class="staff-item"><span class="staff-name">여인경</span><span class="staff-rank">_과장</span></div>
-            <div class="staff-item"><span class="staff-name">이우림</span><span class="staff-rank">_사원</span></div>
+            <div class="staff-item"><span class="staff-name">고정인</span><span class="staff-rank">_대리</span></div>
+            <div class="staff-item"><span class="staff-name">김윤서</span><span class="staff-rank">_대리</span></div>
+            <div class="staff-item"><span class="staff-name">최제열</span><span class="staff-rank">_과장</span></div>
+          </div>
+        </div>
+        <div class="dept-card theme-pur" onclick="openModal('구매','Purchasing')">
+          <div class="dept-head"><div class="dept-kr">구매</div><div class="dept-en">Purchasing</div></div>
+          <div class="dept-staff">
+            <div class="staff-item"><span class="staff-name">이주석</span><span class="staff-rank">_대리</span></div>
+            <div class="staff-item"><span class="staff-name">최다희</span><span class="staff-rank">_대리</span></div>
+          </div>
+        </div>
+        <div class="dept-card theme-prod" onclick="openModal('제조','Production')">
+          <div class="dept-head"><div class="dept-kr">제조</div><div class="dept-en">Production</div></div>
+          <div class="dept-staff">
+            <div class="staff-item"><span class="staff-name">정의찬</span><span class="staff-rank">_차장(팀장)</span><span class="staff-star">⭐</span></div>
+            <div class="staff-item"><span class="staff-name">정귀오</span><span class="staff-rank">_대리</span></div>
+          </div>
+        </div>
+        <div class="dept-card theme-log" onclick="openModal('물류','Logistics')">
+          <div class="dept-head"><div class="dept-kr">물류</div><div class="dept-en">Logistics</div></div>
+          <div class="dept-staff">
+            <div class="staff-item"><span class="staff-name">신의철</span><span class="staff-rank">_과장</span></div>
           </div>
         </div>
       </div>
-    </div>
-    <!-- 성남 -->
-    <div class="campus campus-seongnam" style="flex:1.6;">
-      <div class="campus-header"><div class="campus-name">성남 CAMPUS</div><div class="campus-leader">김아리 부대표</div></div>
-      <div style="display:flex;gap:8px;">
-        <div style="display:flex;flex-direction:column;gap:8px;flex:1;">
-          <div class="dept-card theme-rnd">
-            <div class="dept-head"><div class="dept-kr">제형연구</div><div class="dept-en">Research &amp; Development</div></div>
-            <div class="dept-staff">
-              <div class="staff-item"><span class="staff-name">김아리</span><span class="staff-rank">_부대표</span><span class="staff-star">⭐</span></div>
-              <div class="staff-item"><span class="staff-name">김지아</span><span class="staff-rank">_책임연구원</span></div>
-              <div class="staff-item"><span class="staff-name">박진하</span><span class="staff-rank">_책임연구원</span></div>
-              <div class="staff-item"><span class="staff-name">윤홍건</span><span class="staff-rank">_연구원</span></div>
-            </div>
-          </div>
-          <div class="dept-card theme-mgmt">
-            <div class="dept-head"><div class="dept-kr">생산관리</div><div class="dept-en">Manufacture Management</div></div>
-            <div class="dept-staff">
-              <div class="staff-item"><span class="staff-name">고정인</span><span class="staff-rank">_대리</span></div>
-              <div class="staff-item"><span class="staff-name">김윤서</span><span class="staff-rank">_대리</span></div>
-              <div class="staff-item"><span class="staff-name">최제열</span><span class="staff-rank">_과장</span></div>
-            </div>
-          </div>
-          <div class="dept-card theme-pur">
-            <div class="dept-head"><div class="dept-kr">구매</div><div class="dept-en">Purchasing</div></div>
-            <div class="dept-staff">
-              <div class="staff-item"><span class="staff-name">이주석</span><span class="staff-rank">_대리</span></div>
-              <div class="staff-item"><span class="staff-name">최다희</span><span class="staff-rank">_대리</span></div>
-            </div>
-          </div>
-          <div class="dept-card theme-prod">
-            <div class="dept-head"><div class="dept-kr">제조</div><div class="dept-en">Production</div></div>
-            <div class="dept-staff">
-              <div class="staff-item"><span class="staff-name">정의찬</span><span class="staff-rank">_차장(팀장)</span><span class="staff-star">⭐</span></div>
-              <div class="staff-item"><span class="staff-name">정귀오</span><span class="staff-rank">_대리</span></div>
-            </div>
-          </div>
-          <div class="dept-card theme-log">
-            <div class="dept-head"><div class="dept-kr">물류</div><div class="dept-en">Logistics</div></div>
-            <div class="dept-staff">
-              <div class="staff-item"><span class="staff-name">신의철</span><span class="staff-rank">_과장</span></div>
-            </div>
+      <div style="display:flex;flex-direction:column;gap:8px;flex:1;">
+        <div class="dept-card theme-mfg" onclick="openModal('제조공장','Manufacture Division')">
+          <div class="dept-head"><div class="dept-kr">제조공장</div><div class="dept-en">Manufacture Division</div></div>
+          <div class="dept-staff">
+            <div class="staff-item"><span class="staff-name">홍순기</span><span class="staff-rank">_부장(공장장)</span><span class="staff-star">⭐</span></div>
+            <div class="staff-item"><span class="staff-name">정언식</span><span class="staff-rank">_차장(팀장)</span><span class="staff-star">⭐</span></div>
+            <div class="staff-item"><span class="staff-name">박나리</span><span class="staff-rank">_과장</span></div>
+            <div class="staff-item"><span class="staff-name">박상은</span><span class="staff-rank">_대리</span></div>
+            <div class="staff-item"><span class="staff-name">정선아</span><span class="staff-rank">_대리</span></div>
+            <div class="staff-item"><span class="staff-name">정슬기</span><span class="staff-rank">_대리</span></div>
+            <div class="staff-item"><span class="staff-name">김미란</span><span class="staff-rank">_대리</span></div>
           </div>
         </div>
-        <div style="display:flex;flex-direction:column;gap:8px;flex:1;">
-          <div class="dept-card theme-mfg">
-            <div class="dept-head"><div class="dept-kr">제조공장</div><div class="dept-en">Manufacture Division</div></div>
-            <div class="dept-staff">
-              <div class="staff-item"><span class="staff-name">홍순기</span><span class="staff-rank">_부장(공장장)</span><span class="staff-star">⭐</span></div>
-              <div class="staff-item"><span class="staff-name">정언식</span><span class="staff-rank">_차장(팀장)</span><span class="staff-star">⭐</span></div>
-              <div class="staff-item"><span class="staff-name">박나리</span><span class="staff-rank">_과장</span></div>
-              <div class="staff-item"><span class="staff-name">박상은</span><span class="staff-rank">_대리</span></div>
-              <div class="staff-item"><span class="staff-name">정선아</span><span class="staff-rank">_대리</span></div>
-              <div class="staff-item"><span class="staff-name">정슬기</span><span class="staff-rank">_대리</span></div>
-              <div class="staff-item"><span class="staff-name">김미란</span><span class="staff-rank">_대리</span></div>
-            </div>
-          </div>
-          <div class="dept-card theme-qa">
-            <div class="dept-head"><div class="dept-kr">품질</div><div class="dept-en">Quality Assurance</div></div>
-            <div class="dept-staff">
-              <div class="staff-item"><span class="staff-name">홍순기</span><span class="staff-rank">_부장(공장장)</span><span class="staff-star">⭐</span></div>
-              <div class="staff-item"><span class="staff-name">정언식</span><span class="staff-rank">_차장(팀장)</span><span class="staff-star">⭐</span></div>
-              <div class="staff-item"><span class="staff-name">고정인</span><span class="staff-rank">_대리</span></div>
-              <div class="staff-item"><span class="staff-name">김미란</span><span class="staff-rank">_대리</span></div>
-            </div>
+        <div class="dept-card theme-qa" onclick="openModal('품질','Quality Assurance')">
+          <div class="dept-head"><div class="dept-kr">품질</div><div class="dept-en">Quality Assurance</div></div>
+          <div class="dept-staff">
+            <div class="staff-item"><span class="staff-name">홍순기</span><span class="staff-rank">_부장(공장장)</span><span class="staff-star">⭐</span></div>
+            <div class="staff-item"><span class="staff-name">정언식</span><span class="staff-rank">_차장(팀장)</span><span class="staff-star">⭐</span></div>
+            <div class="staff-item"><span class="staff-name">고정인</span><span class="staff-rank">_대리</span></div>
+            <div class="staff-item"><span class="staff-name">김미란</span><span class="staff-rank">_대리</span></div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="legend">
-    <div class="legend-item"><span>⭐</span> 팀장 / 리더</div>
-    <div class="legend-item">직원 표기: 이름_직급</div>
-  </div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><span>⭐</span> 팀장 / 리더</div>
+  <div class="legend-item">💡 부서 카드 클릭 시 상세 R&R 확인 가능</div>
+</div>
+
+<script>
+const API_URL = 'https://script.google.com/macros/s/AKfycbwp7lVz8Wu5ngszztKGQ8Z2j_kywrD7D6kc8usalW0axd0aKCfmfSabJsKTnMVIw-vzrg/exec';
+
+// 부서명 매핑 (조직도 표시명 → 시트 부서명)
+const DEPT_MAP = {
+  '전략':             ['전략팀', '전략'],
+  '인사':             ['인사', '경영지원'],
+  '재무':             ['재무', '경영지원 Fi', '경영지원\nFi'],
+  '브랜드 매니지먼트팀': ['브랜드', '브랜드매니지먼트'],
+  '운영지원':         ['운영지원'],
+  'SALES 1팀':        ['SALES 1팀', 'Sales 1팀'],
+  'SALES 2팀':        ['SALES 2팀', 'Sales 2팀'],
+  'SALES 3팀':        ['SALES 3팀', 'Sales 3팀'],
+  'Bio Center':       ['Bio Center', '신소재'],
+  '알텀공장':         ['알텀공장', 'Altum'],
+  '제형연구':         ['제형연구'],
+  '생산관리':         ['생산관리'],
+  '구매':             ['구매'],
+  '제조':             ['제조'],
+  '물류':             ['물류'],
+  '제조공장':         ['제조공장'],
+  '품질':             ['품질'],
+};
+
+let sheetData = null;
+
+async function loadData() {
+  if (sheetData) return sheetData;
+  try {
+    const res = await fetch(API_URL);
+    sheetData = await res.json();
+  } catch(e) {
+    sheetData = [];
+  }
+  return sheetData;
+}
+
+function openModal(deptKr, deptEn) {
+  const overlay = document.getElementById('modalOverlay');
+  const title   = document.getElementById('modalTitle');
+  const content = document.getElementById('modalContent');
+  title.textContent = deptKr + (deptEn ? '  ·  ' + deptEn : '');
+  content.innerHTML = '<div class="loading">데이터 불러오는 중...</div>';
+  overlay.classList.add('show');
+
+  loadData().then(data => {
+    const keys = DEPT_MAP[deptKr] || [deptKr];
+    const members = data.filter(r => {
+      const d = String(r.dept || '').trim();
+      return keys.some(k => d.includes(k));
+    });
+
+    if (!members.length) {
+      content.innerHTML = '<div class="loading">해당 부서 데이터가 없습니다.<br>시트의 부서명을 확인해주세요.</div>';
+      return;
+    }
+
+    content.innerHTML = members.map(m => {
+      const isLeader = String(m.rank||'').includes('부장') || String(m.rank||'').includes('과장') ||
+                       String(m.rank||'').includes('부대표') || String(m.rank||'').includes('센터장') ||
+                       String(m.rank||'').includes('차장') || String(m.rank||'').includes('대표');
+      const rankClass = isLeader ? 'modal-person-rank leader' : 'modal-person-rank';
+      const rrLines = String(m.rr||'').trim().split('\n').filter(Boolean);
+
+      return `
+        <div class="modal-person">
+          <div class="modal-person-header">
+            <span class="modal-person-name">${m.name||''}</span>
+            <span class="${rankClass}">${m.phone ? m.phone.toString().replace(/[^0-9-]/g,'').substring(0,20) : ''}</span>
+          </div>
+          <div class="modal-info-row">
+            <span class="modal-info-label">직급</span>
+            <span class="modal-info-value">${m.ext || '-'}</span>
+          </div>
+          <div class="modal-info-row">
+            <span class="modal-info-label">연락처</span>
+            <span class="modal-info-value">${m.phone || '-'}</span>
+          </div>
+          <div class="modal-info-row">
+            <span class="modal-info-label">내선</span>
+            <span class="modal-info-value">${m.ext || '-'}</span>
+          </div>
+          ${rrLines.length ? `
+          <div class="modal-rr">
+            <div class="modal-rr-label">R&R (담당 업무)</div>
+            ${rrLines.map(l => `<div>• ${l.replace(/^[-•]\s*/,'')}</div>`).join('')}
+          </div>` : ''}
+        </div>`;
+    }).join('');
+  });
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModalDirect();
+}
+function closeModalDirect() {
+  document.getElementById('modalOverlay').classList.remove('show');
+}
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModalDirect(); });
+</script>
 </body>
 </html>
