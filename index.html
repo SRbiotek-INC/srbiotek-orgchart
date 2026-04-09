@@ -201,7 +201,7 @@ async function renderOrgChart() {
   data.forEach(m => {
     const d = String(m.dept || '').trim();
     for (const key of Object.keys(DEPT_CONFIG)) {
-      if (d === key || d.includes(key.split('\n')[0])) {
+      if (matchDept(d, key)) {
         if (!deptMembers[key].find(x => x.name === m.name)) {
           deptMembers[key].push(m);
         }
@@ -294,8 +294,8 @@ function openModal(deptKey, deptKr, deptEn) {
     const cfg = DEPT_CONFIG[deptKey] || {};
     const members = data.filter(m => {
       const d = String(m.dept || '').trim();
-      return d === deptKey || d.includes(deptKey.split('\n')[0]) || 
-             (deptKey === '제조공장' && d.includes('제조/생산관리/물류'));
+      return matchDept(d, deptKey) || 
+             (deptKey === '제조/생산관리/물류\n총괄' && d.includes('제조/생산관리'));
     }).filter(m => !(cfg.exclude || []).includes(m.name));
 
     if (!members.length) {
