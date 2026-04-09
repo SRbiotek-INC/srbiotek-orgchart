@@ -259,6 +259,13 @@ function renderOrgChart() {
       var members = getMembersByKey(data, key);
       el.innerHTML = makeStaffHTML(members, cfg.leaders || []);
     });
+
+    // 제조공장 상단 홍순기 렌더링
+    var mfgTop = document.getElementById(keyToId('제조/생산관리/물류') + '-top');
+    if (mfgTop) {
+      var mfgMembers = getMembersByKey(data, '제조/생산관리/물류');
+      mfgTop.innerHTML = makeStaffHTML(mfgMembers, ['홍순기']);
+    }
   });
 }
 
