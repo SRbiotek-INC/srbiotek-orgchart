@@ -384,20 +384,20 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbwp7lVz8Wu5ngszztKGQ8Z2
 
 // 부서명 매핑 (조직도 표시명 → 시트 부서명)
 const DEPT_MAP = {
-  '전략':              ['전략팀'],
-  '인사':              ['경영지원\n인사 / 총무 전반', '인사 / 총무'],
-  '재무':              ['경영지원\n재무 / 회계 전반', '경영지원\nFI', '경영지원FI'],
-  '브랜드 매니지먼트팀': ['브랜드 매니지먼트', 'IDENEL', '브랜드매니지먼트'],
+  '전략':              ['전략 기획', '전략팀'],
+  '인사':              ['경영지원\n인사 / 총무 전반', '인사 / 총무', '인사'],
+  '재무':              ['경영지원\n재무 / 회계 전반', '경영지원\nFI', '경영지원FI', '재무'],
+  '브랜드 매니지먼트팀': ['브랜드 매니지먼트', 'IDENEL', '브랜드매니지먼트', 'DENEL'],
   '운영지원':          ['운영지원'],
-  'SALES 1팀':         ['SALES 1팀'],
-  'SALES 2팀':         ['SALES 2팀'],
-  'SALES 3팀':         ['SALES 3팀'],
-  'Bio Center':        ['신소재 개발팀\nBIO CENTER'],
-  '알텀공장':          ['알텀공장'],
+  'SALES 1팀':         ['SALES 1팀', 'Sales 1'],
+  'SALES 2팀':         ['SALES 2팀', 'Sales 2'],
+  'SALES 3팀':         ['SALES 3팀', 'Sales 3'],
+  'Bio Center':        ['신소재 개발팀\nBIO CENTER', 'BIO CENTER', '신소재 개발'],
+  '알텀공장':          ['알텀공장', '합성'],
   '제형연구':          ['제형연구'],
-  '생산관리':          ['생산관리', '제조/생산관리/물류팀'],
+  '생산관리':          ['생산관리'],
   '구매':              ['구매팀PU', '구매'],
-  '제조':              ['제조팀', '제조'],
+  '제조':              ['제조팀PD', '제조팀', '제조'],
   '물류':              ['물류'],
   '제조공장':          ['제조공장'],
   '품질':              ['품질보증', '품질'],
@@ -440,18 +440,17 @@ function openModal(deptKr, deptEn) {
       const isLeader = String(m.rank||'').includes('부장') || String(m.rank||'').includes('과장') ||
                        String(m.rank||'').includes('부대표') || String(m.rank||'').includes('센터장') ||
                        String(m.rank||'').includes('차장') || String(m.rank||'').includes('대표');
-      const rankClass = isLeader ? 'modal-person-rank leader' : 'modal-person-rank';
       const rrLines = String(m.rr||'').trim().split('\n').filter(Boolean);
 
       return `
         <div class="modal-person">
           <div class="modal-person-header">
             <span class="modal-person-name">${m.name||''}</span>
-            <span class="${rankClass}">${m.phone ? m.phone.toString().replace(/[^0-9-]/g,'').substring(0,20) : ''}</span>
+            <span class="modal-person-rank ${m.rank ? 'leader' : ''}">${m.phone || '-'}</span>
           </div>
           <div class="modal-info-row">
             <span class="modal-info-label">직급</span>
-            <span class="modal-info-value">${m.ext || '-'}</span>
+            <span class="modal-info-value">${m.rank || '-'}</span>
           </div>
           <div class="modal-info-row">
             <span class="modal-info-label">연락처</span>
