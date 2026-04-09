@@ -92,14 +92,14 @@
 <hr class="divider">
 
 <!-- CEO / 임원 -->
-<div style="display:flex;align-items:flex-start;margin-bottom:20px;position:relative;">
+<div style="display:flex;align-items:flex-start;margin-bottom:20px;position:relative;min-height:60px;">
   <div style="position:absolute;left:50%;transform:translateX(-50%);">
     <div style="background:#6c63b6;border-radius:12px;padding:11px 32px;text-align:center;">
       <div style="font-size:9px;color:#d4cfff;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:3px;">CEO</div>
       <div style="font-size:16px;font-weight:700;color:#fff;">이소형</div>
     </div>
   </div>
-  <div style="display:flex;flex-direction:column;gap:5px;margin-left:auto;">
+  <div style="display:flex;flex-direction:column;gap:5px;position:absolute;right:0;">
     <div style="background:#d4cff0;border-radius:7px;padding:5px 12px;text-align:center;min-width:110px;">
       <div style="font-size:8px;color:#5a4aa0;letter-spacing:0.8px;">연구총괄 CSO</div>
       <div style="font-size:11px;font-weight:600;color:#3b2d7a;">송병호</div>
@@ -140,11 +140,10 @@ const DEPT_CONFIG = {
   '제형연구':                     { kr:'제형연구', en:'Research & Development', theme:'theme-rnd', campus:'seongnam', leaders:['김아리'], exclude:['윤홍건'] },
   '제조공장':                     { kr:'제조공장', en:'Manufacture Division', theme:'theme-mfg', campus:'seongnam', leaders:['홍순기'], onlyLeader:true },
   '제조/생산관리/물류\n총괄':     { kr:'제조공장', en:'Manufacture Division', theme:'theme-mfg', campus:'seongnam', leaders:['홍순기'], onlyLeader:true },
-  '생산관리\nMM':                 { kr:'생산관리', en:'Manufacture Management', theme:'theme-mgmt', campus:'seongnam', leaders:[], exclude:['고정인','김윤서'] },
-  '구매팀PU':                     { kr:'구매', en:'Purchasing', theme:'theme-pur', campus:'seongnam', leaders:[] },
+  '생산관리\nMM':                 { kr:'생산관리', en:'Manufacture Management', theme:'theme-mgmt', campus:'seongnam', leaders:[], exclude:['고정인','김윤서'] },  '구매팀PU':                     { kr:'구매', en:'Purchasing', theme:'theme-pur', campus:'seongnam', leaders:[] },
   '제조팀PD':                     { kr:'제조', en:'Production', theme:'theme-prod', campus:'seongnam', leaders:['정의찬'] },
   '물류팀':                       { kr:'물류', en:'Logistics', theme:'theme-log', campus:'seongnam', leaders:[] },
-  '품질보증':                     { kr:'품질', en:'Quality Assurance', theme:'theme-qa', campus:'seongnam', leaders:['홍순기'] },
+  '품질보증':                     { kr:'품질', en:'Quality Assurance', theme:'theme-qa', campus:'seongnam', leaders:['정언식'], exclude:['홍순기'] },
 };
 
 // 캠퍼스 레이아웃 설정
