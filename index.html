@@ -11,14 +11,7 @@
   .logo-text { font-size: 22px; font-weight: 700; color: #3d3d5c; letter-spacing: -0.5px; }
   .logo-sub { font-size: 13px; color: #aaa; }
   .divider { border: none; border-top: 1.5px solid #ece9f1; margin: 12px 0 24px; }
-  .exec-row { display: flex; justify-content: center; align-items: flex-start; gap: 12px; margin-bottom: 20px; }
-  .ceo-card { background: #6c63b6; border-radius: 12px; padding: 11px 32px; text-align: center; min-width: 150px; }
-  .ceo-card .role { font-size: 9px; color: #d4cfff; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 3px; }
-  .ceo-card .name { font-size: 16px; font-weight: 700; color: #fff; }
-  .exec-side { display: flex; flex-direction: column; gap: 6px; }
-  .exec-mini { background: #a89fd4; border-radius: 8px; padding: 7px 16px; text-align: center; min-width: 150px; }
-  .exec-mini .role { font-size: 9px; color: #ede9ff; letter-spacing: 0.8px; }
-  .exec-mini .name { font-size: 12px; font-weight: 600; color: #fff; }
+
   .campuses { display: flex; gap: 14px; align-items: flex-start; }
   .campus { border-radius: 14px; padding: 13px; flex: 1; }
   .campus-gangnam { background: #f5f0ff; border: 1.5px solid #c9b8f5; }
@@ -31,142 +24,52 @@
   .campus-seongnam .campus-name { color: #c4763a; }
   .campus-leader { font-size: 11px; font-weight: 600; color: #555; }
 
-  /* 부서 카드 */
   .dept-card { border-radius: 10px; overflow: hidden; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; }
   .dept-card:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.12); }
   .dept-head { padding: 7px 10px; text-align: center; }
   .dept-head .dept-kr { font-size: 11px; font-weight: 700; line-height: 1.35; }
   .dept-head .dept-en { font-size: 9px; font-weight: 400; opacity: 0.75; line-height: 1.3; margin-top: 1px; }
-  .dept-staff { background: #fff; padding: 7px 9px; border: 1.5px solid; border-top: none; border-radius: 0 0 10px 10px; }
+  .dept-staff { background: #fff; padding: 7px 9px; border: 1.5px solid; border-top: none; border-radius: 0 0 10px 10px; min-height: 30px; }
   .staff-item { font-size: 10px; line-height: 1.75; white-space: nowrap; display: flex; align-items: center; gap: 2px; }
   .staff-name { font-weight: 600; color: #3d3d5c; }
   .staff-rank { font-weight: 400; color: #888; }
   .staff-star { font-size: 10px; }
+  .loading-card { font-size: 10px; color: #bbb; text-align: center; padding: 8px; }
 
-  /* 팝업 오버레이 */
-  .modal-overlay {
-    display: none;
-    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.45);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-  }
+  /* 팝업 */
+  .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.45); z-index: 1000; align-items: center; justify-content: center; }
   .modal-overlay.show { display: flex; }
-  .modal {
-    background: #fff;
-    border-radius: 16px;
-    padding: 28px;
-    width: 480px;
-    max-width: 90vw;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.18);
-    position: relative;
-  }
-  .modal-close {
-    position: absolute; top: 16px; right: 18px;
-    font-size: 20px; color: #aaa; cursor: pointer; background: none; border: none;
-  }
+  .modal { background: #fff; border-radius: 16px; padding: 28px; width: 480px; max-width: 90vw; max-height: 80vh; overflow-y: auto; box-shadow: 0 8px 40px rgba(0,0,0,0.18); position: relative; }
+  .modal-close { position: absolute; top: 16px; right: 18px; font-size: 20px; color: #aaa; cursor: pointer; background: none; border: none; }
   .modal-close:hover { color: #555; }
-  .modal-dept-title {
-    font-size: 16px; font-weight: 700; color: #3d3d5c;
-    margin-bottom: 16px; padding-bottom: 12px;
-    border-bottom: 2px solid #ece9f1;
-  }
-  .modal-person {
-    background: #f8f7ff;
-    border-radius: 10px;
-    padding: 14px 16px;
-    margin-bottom: 10px;
-  }
-  .modal-person-header {
-    display: flex; align-items: center; gap: 8px;
-    margin-bottom: 8px;
-  }
+  .modal-dept-title { font-size: 16px; font-weight: 700; color: #3d3d5c; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid #ece9f1; }
+  .modal-person { background: #f8f7ff; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
+  .modal-person-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
   .modal-person-name { font-size: 15px; font-weight: 700; color: #3d3d5c; }
-  .modal-person-rank {
-    font-size: 11px; color: #fff; background: #6c63b6;
-    border-radius: 20px; padding: 2px 9px; font-weight: 500;
-  }
-  .modal-person-rank.leader { background: #f59e0b; }
-  .modal-info-row {
-    display: flex; align-items: flex-start; gap: 8px;
-    font-size: 12px; color: #555; margin-bottom: 4px; line-height: 1.5;
-  }
-  .modal-info-label {
-    font-weight: 600; color: #6c63b6; min-width: 44px; flex-shrink: 0;
-  }
+  .modal-person-rank { font-size: 11px; color: #fff; background: #6c63b6; border-radius: 20px; padding: 2px 9px; font-weight: 500; }
+  .modal-info-row { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: #555; margin-bottom: 4px; line-height: 1.5; }
+  .modal-info-label { font-weight: 600; color: #6c63b6; min-width: 44px; flex-shrink: 0; }
   .modal-info-value { color: #444; }
-  .modal-rr {
-    margin-top: 8px; padding-top: 8px;
-    border-top: 1px solid #e5e1f5;
-    font-size: 11px; color: #555; line-height: 1.7;
-  }
+  .modal-rr { margin-top: 8px; padding-top: 8px; border-top: 1px solid #e5e1f5; font-size: 11px; color: #555; line-height: 1.7; }
   .modal-rr-label { font-weight: 700; color: #3d3d5c; margin-bottom: 4px; font-size: 12px; }
   .loading { text-align: center; color: #aaa; font-size: 13px; padding: 20px; }
 
   /* 테마 */
-  .theme-strategic .dept-head { background: #c8bbf5; }
-  .theme-strategic .dept-head .dept-kr { color: #3b2d7a; }
-  .theme-strategic .dept-head .dept-en { color: #5a4aa0; }
-  .theme-strategic .dept-staff { border-color: #c8bbf5; }
-  .theme-hr .dept-head { background: #f2b8d8; }
-  .theme-hr .dept-head .dept-kr { color: #7a1f4e; }
-  .theme-hr .dept-head .dept-en { color: #a0366a; }
-  .theme-hr .dept-staff { border-color: #f2b8d8; }
-  .theme-finance .dept-head { background: #a8e6cf; }
-  .theme-finance .dept-head .dept-kr { color: #1a5c3a; }
-  .theme-finance .dept-head .dept-en { color: #2e7a52; }
-  .theme-finance .dept-staff { border-color: #a8e6cf; }
-  .theme-brand .dept-head { background: #ffcba4; }
-  .theme-brand .dept-head .dept-kr { color: #7a3310; }
-  .theme-brand .dept-head .dept-en { color: #9e4a20; }
-  .theme-brand .dept-staff { border-color: #ffcba4; }
-  .theme-ops .dept-head { background: #b3dcf5; }
-  .theme-ops .dept-head .dept-kr { color: #0e4068; }
-  .theme-ops .dept-head .dept-en { color: #1a5a8a; }
-  .theme-ops .dept-staff { border-color: #b3dcf5; }
-  .theme-sales .dept-head { background: #ffb3b3; }
-  .theme-sales .dept-head .dept-kr { color: #7a1a1a; }
-  .theme-sales .dept-head .dept-en { color: #9e2a2a; }
-  .theme-sales .dept-staff { border-color: #ffb3b3; }
-  .theme-bio .dept-head { background: #b5e8c8; }
-  .theme-bio .dept-head .dept-kr { color: #145230; }
-  .theme-bio .dept-head .dept-en { color: #1e6e42; }
-  .theme-bio .dept-staff { border-color: #b5e8c8; }
-  .theme-altum .dept-head { background: #ffe49a; }
-  .theme-altum .dept-head .dept-kr { color: #5c3c00; }
-  .theme-altum .dept-head .dept-en { color: #7a5200; }
-  .theme-altum .dept-staff { border-color: #ffe49a; }
-  .theme-rnd .dept-head { background: #bdc8f5; }
-  .theme-rnd .dept-head .dept-kr { color: #1a2670; }
-  .theme-rnd .dept-head .dept-en { color: #2a3a8a; }
-  .theme-rnd .dept-staff { border-color: #bdc8f5; }
-  .theme-mfg .dept-head { background: #f5b8c8; }
-  .theme-mfg .dept-head .dept-kr { color: #7a1a35; }
-  .theme-mfg .dept-head .dept-en { color: #9e2848; }
-  .theme-mfg .dept-staff { border-color: #f5b8c8; }
-  .theme-qa .dept-head { background: #a8d4f5; }
-  .theme-qa .dept-head .dept-kr { color: #0a3256; }
-  .theme-qa .dept-head .dept-en { color: #164878; }
-  .theme-qa .dept-staff { border-color: #a8d4f5; }
-  .theme-mgmt .dept-head { background: #c8e6c0; }
-  .theme-mgmt .dept-head .dept-kr { color: #1e4a18; }
-  .theme-mgmt .dept-head .dept-en { color: #2c6224; }
-  .theme-mgmt .dept-staff { border-color: #c8e6c0; }
-  .theme-pur .dept-head { background: #e8d5b8; }
-  .theme-pur .dept-head .dept-kr { color: #5c3c10; }
-  .theme-pur .dept-head .dept-en { color: #7a521e; }
-  .theme-pur .dept-staff { border-color: #e8d5b8; }
-  .theme-prod .dept-head { background: #ffc8b0; }
-  .theme-prod .dept-head .dept-kr { color: #7a2810; }
-  .theme-prod .dept-head .dept-en { color: #9e3a1e; }
-  .theme-prod .dept-staff { border-color: #ffc8b0; }
-  .theme-log .dept-head { background: #c8d4e8; }
-  .theme-log .dept-head .dept-kr { color: #1e2e50; }
-  .theme-log .dept-head .dept-en { color: #2a3e6a; }
-  .theme-log .dept-staff { border-color: #c8d4e8; }
+  .theme-strategic .dept-head { background: #c8bbf5; } .theme-strategic .dept-head .dept-kr { color: #3b2d7a; } .theme-strategic .dept-head .dept-en { color: #5a4aa0; } .theme-strategic .dept-staff { border-color: #c8bbf5; }
+  .theme-hr .dept-head { background: #f2b8d8; } .theme-hr .dept-head .dept-kr { color: #7a1f4e; } .theme-hr .dept-head .dept-en { color: #a0366a; } .theme-hr .dept-staff { border-color: #f2b8d8; }
+  .theme-finance .dept-head { background: #a8e6cf; } .theme-finance .dept-head .dept-kr { color: #1a5c3a; } .theme-finance .dept-head .dept-en { color: #2e7a52; } .theme-finance .dept-staff { border-color: #a8e6cf; }
+  .theme-brand .dept-head { background: #ffcba4; } .theme-brand .dept-head .dept-kr { color: #7a3310; } .theme-brand .dept-head .dept-en { color: #9e4a20; } .theme-brand .dept-staff { border-color: #ffcba4; }
+  .theme-ops .dept-head { background: #b3dcf5; } .theme-ops .dept-head .dept-kr { color: #0e4068; } .theme-ops .dept-head .dept-en { color: #1a5a8a; } .theme-ops .dept-staff { border-color: #b3dcf5; }
+  .theme-sales .dept-head { background: #ffb3b3; } .theme-sales .dept-head .dept-kr { color: #7a1a1a; } .theme-sales .dept-head .dept-en { color: #9e2a2a; } .theme-sales .dept-staff { border-color: #ffb3b3; }
+  .theme-bio .dept-head { background: #b5e8c8; } .theme-bio .dept-head .dept-kr { color: #145230; } .theme-bio .dept-head .dept-en { color: #1e6e42; } .theme-bio .dept-staff { border-color: #b5e8c8; }
+  .theme-altum .dept-head { background: #ffe49a; } .theme-altum .dept-head .dept-kr { color: #5c3c00; } .theme-altum .dept-head .dept-en { color: #7a5200; } .theme-altum .dept-staff { border-color: #ffe49a; }
+  .theme-rnd .dept-head { background: #bdc8f5; } .theme-rnd .dept-head .dept-kr { color: #1a2670; } .theme-rnd .dept-head .dept-en { color: #2a3a8a; } .theme-rnd .dept-staff { border-color: #bdc8f5; }
+  .theme-mfg .dept-head { background: #f5b8c8; } .theme-mfg .dept-head .dept-kr { color: #7a1a35; } .theme-mfg .dept-head .dept-en { color: #9e2848; } .theme-mfg .dept-staff { border-color: #f5b8c8; }
+  .theme-qa .dept-head { background: #a8d4f5; } .theme-qa .dept-head .dept-kr { color: #0a3256; } .theme-qa .dept-head .dept-en { color: #164878; } .theme-qa .dept-staff { border-color: #a8d4f5; }
+  .theme-mgmt .dept-head { background: #c8e6c0; } .theme-mgmt .dept-head .dept-kr { color: #1e4a18; } .theme-mgmt .dept-head .dept-en { color: #2c6224; } .theme-mgmt .dept-staff { border-color: #c8e6c0; }
+  .theme-pur .dept-head { background: #e8d5b8; } .theme-pur .dept-head .dept-kr { color: #5c3c10; } .theme-pur .dept-head .dept-en { color: #7a521e; } .theme-pur .dept-staff { border-color: #e8d5b8; }
+  .theme-prod .dept-head { background: #ffc8b0; } .theme-prod .dept-head .dept-kr { color: #7a2810; } .theme-prod .dept-head .dept-en { color: #9e3a1e; } .theme-prod .dept-staff { border-color: #ffc8b0; }
+  .theme-log .dept-head { background: #c8d4e8; } .theme-log .dept-head .dept-kr { color: #1e2e50; } .theme-log .dept-head .dept-en { color: #2a3e6a; } .theme-log .dept-staff { border-color: #c8d4e8; }
   .legend { display: flex; gap: 16px; margin-top: 20px; padding-top: 12px; border-top: 1px solid #ece9f1; flex-wrap: wrap; align-items: center; }
   .legend-item { font-size: 10px; color: #999; display: flex; align-items: center; gap: 4px; }
 </style>
@@ -188,219 +91,67 @@
 </div>
 <hr class="divider">
 
-<div class="exec-row">
-  <div class="exec-side">
-    <div class="exec-mini"><div class="role">연구총괄 CSO</div><div class="name">송병호</div></div>
-    <div class="exec-mini"><div class="role">사내이사</div><div class="name">박현석 이사</div></div>
+<!-- CEO / 임원 -->
+<div style="display:flex;align-items:flex-start;margin-bottom:20px;position:relative;">
+  <div style="position:absolute;left:50%;transform:translateX(-50%);">
+    <div style="background:#6c63b6;border-radius:12px;padding:11px 32px;text-align:center;">
+      <div style="font-size:9px;color:#d4cfff;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:3px;">CEO</div>
+      <div style="font-size:16px;font-weight:700;color:#fff;">이소형</div>
+    </div>
   </div>
-  <div class="ceo-card"><div class="role">CEO</div><div class="name">이소형</div></div>
+  <div style="display:flex;flex-direction:column;gap:5px;margin-left:auto;">
+    <div style="background:#d4cff0;border-radius:7px;padding:5px 12px;text-align:center;min-width:110px;">
+      <div style="font-size:8px;color:#5a4aa0;letter-spacing:0.8px;">연구총괄 CSO</div>
+      <div style="font-size:11px;font-weight:600;color:#3b2d7a;">송병호</div>
+    </div>
+    <div style="background:#d4cff0;border-radius:7px;padding:5px 12px;text-align:center;min-width:110px;">
+      <div style="font-size:8px;color:#5a4aa0;letter-spacing:0.8px;">사내이사</div>
+      <div style="font-size:11px;font-weight:600;color:#3b2d7a;">박현석 이사</div>
+    </div>
+  </div>
 </div>
 
-<div class="campuses">
-  <!-- 강남 -->
-  <div class="campus campus-gangnam" style="flex:2.2;">
-    <div class="campus-header"><div class="campus-name">강남 CAMPUS</div><div class="campus-leader">이소형 대표</div></div>
-    <div style="display:flex;gap:8px;margin-bottom:8px;">
-      <div class="dept-card theme-strategic" style="flex:1.8;" onclick="openModal('전략','Strategic')">
-        <div class="dept-head"><div class="dept-kr">전략</div><div class="dept-en">Strategic</div></div>
-        <div class="dept-staff">
-          <div class="staff-item"><span class="staff-name">노서희</span><span class="staff-rank">_대리</span><span class="staff-star">⭐</span></div>
-          <div class="staff-item"><span class="staff-name">김예빈</span><span class="staff-rank">_사원</span></div>
-          <div class="staff-item"><span class="staff-name">이은지</span><span class="staff-rank">_사원</span></div>
-          <div class="staff-item"><span class="staff-name">곽윤서</span><span class="staff-rank">_대리</span></div>
-          <div class="staff-item"><span class="staff-name">왕자문</span><span class="staff-rank">_사원</span></div>
-          <div class="staff-item"><span class="staff-name">엄다혜</span><span class="staff-rank">_사원</span></div>
-          <div class="staff-item"><span class="staff-name">조은비</span><span class="staff-rank">_인턴</span></div>
-          <div class="staff-item"><span class="staff-name">박지인</span><span class="staff-rank">_인턴</span></div>
-        </div>
-      </div>
-      <div class="dept-card theme-hr" style="flex:1;" onclick="openModal('인사','Human Resource')">
-        <div class="dept-head"><div class="dept-kr">인사</div><div class="dept-en">Human Resource</div></div>
-        <div class="dept-staff">
-          <div class="staff-item"><span class="staff-name">김석원</span><span class="staff-rank">_과장</span><span class="staff-star">⭐</span></div>
-          <div class="staff-item"><span class="staff-name">이아라</span><span class="staff-rank">_과장</span></div>
-        </div>
-      </div>
-      <div class="dept-card theme-finance" style="flex:1;" onclick="openModal('재무','Finance')">
-        <div class="dept-head"><div class="dept-kr">재무</div><div class="dept-en">Finance</div></div>
-        <div class="dept-staff">
-          <div class="staff-item"><span class="staff-name">고대진</span><span class="staff-rank">_부장</span><span class="staff-star">⭐</span></div>
-          <div class="staff-item"><span class="staff-name">김나리</span><span class="staff-rank">_대리</span></div>
-        </div>
-      </div>
-    </div>
-    <div style="display:flex;gap:8px;margin-bottom:8px;">
-      <div class="dept-card theme-brand" style="flex:1.5;" onclick="openModal('브랜드 매니지먼트팀','Brand Management')">
-        <div class="dept-head"><div class="dept-kr">브랜드 매니지먼트팀</div><div class="dept-en">Brand Management</div></div>
-        <div class="dept-staff">
-          <div class="staff-item"><span class="staff-name">최희정</span><span class="staff-rank">_부장</span><span class="staff-star">⭐</span></div>
-          <div class="staff-item"><span class="staff-name">김윤지</span><span class="staff-rank">_과장</span></div>
-          <div class="staff-item"><span class="staff-name">박나리</span><span class="staff-rank">_과장</span></div>
-          <div class="staff-item"><span class="staff-name">김윤서</span><span class="staff-rank">_대리</span></div>
-          <div class="staff-item"><span class="staff-name">정선아</span><span class="staff-rank">_대리</span></div>
-          <div class="staff-item"><span class="staff-name">정슬기</span><span class="staff-rank">_대리</span></div>
-        </div>
-      </div>
-      <div class="dept-card theme-ops" style="flex:1;" onclick="openModal('운영지원','Operations Support')">
-        <div class="dept-head"><div class="dept-kr">운영지원</div><div class="dept-en">Operations Support</div></div>
-        <div class="dept-staff">
-          <div class="staff-item"><span class="staff-name">김아리</span><span class="staff-rank">_부대표</span><span class="staff-star">⭐</span></div>
-          <div class="staff-item"><span class="staff-name">박서현</span><span class="staff-rank">_사원</span></div>
-        </div>
-      </div>
-    </div>
-    <div style="display:flex;gap:8px;">
-      <div class="dept-card theme-sales" style="flex:1;" onclick="openModal('SALES 1팀','Sales Team 1')">
-        <div class="dept-head"><div class="dept-kr">SALES 1팀</div><div class="dept-en">Sales Team 1</div></div>
-        <div class="dept-staff">
-          <div class="staff-item"><span class="staff-name">김아리</span><span class="staff-rank">_부대표</span><span class="staff-star">⭐</span></div>
-          <div class="staff-item"><span class="staff-name">유지원</span><span class="staff-rank">_대리</span></div>
-          <div class="staff-item"><span class="staff-name">박상은</span><span class="staff-rank">_대리</span></div>
-        </div>
-      </div>
-      <div class="dept-card theme-sales" style="flex:1;" onclick="openModal('SALES 2팀','Sales Team 2')">
-        <div class="dept-head"><div class="dept-kr">SALES 2팀</div><div class="dept-en">Sales Team 2</div></div>
-        <div class="dept-staff">
-          <div class="staff-item"><span class="staff-name">임다정</span><span class="staff-rank">_과장</span><span class="staff-star">⭐</span></div>
-          <div class="staff-item"><span class="staff-name">이미연</span><span class="staff-rank">_사원</span></div>
-        </div>
-      </div>
-      <div class="dept-card theme-sales" style="flex:1;" onclick="openModal('SALES 3팀','Sales Team 3')">
-        <div class="dept-head"><div class="dept-kr">SALES 3팀</div><div class="dept-en">Sales Team 3</div></div>
-        <div class="dept-staff">
-          <div class="staff-item"><span class="staff-name">베카</span><span class="staff-rank">_과장</span><span class="staff-star">⭐</span></div>
-          <div class="staff-item"><span class="staff-name">박지희</span><span class="staff-rank">_대리</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 광교 -->
-  <div class="campus campus-gwangyo" style="flex:1;">
-    <div class="campus-header"><div class="campus-name">광교 CAMPUS</div><div class="campus-leader">박가민 부장 (센터장)</div></div>
-    <div style="display:flex;flex-direction:column;gap:8px;">
-      <div class="dept-card theme-bio" onclick="openModal('Bio Center','신소재 개발')">
-        <div class="dept-head"><div class="dept-kr">신소재 개발 Bio Center</div><div class="dept-en">New Material Development</div></div>
-        <div class="dept-staff">
-          <div class="staff-item"><span class="staff-name">박가민</span><span class="staff-rank">_부장(센터장)</span><span class="staff-star">⭐</span></div>
-          <div class="staff-item"><span class="staff-name">정윤조</span><span class="staff-rank">_책임연구원</span></div>
-                    <div class="staff-item"><span class="staff-name">박찬후</span><span class="staff-rank">_연구원</span></div>
-          
-        </div>
-      </div>
-      <div class="dept-card theme-altum" onclick="openModal('알텀공장','Altum Plant')">
-        <div class="dept-head"><div class="dept-kr">알텀공장</div><div class="dept-en">Altum Plant</div></div>
-        <div class="dept-staff">
-          <div class="staff-item"><span class="staff-name">김동수</span><span class="staff-rank">_사원</span></div>
-          <div class="staff-item"><span class="staff-name">여인경</span><span class="staff-rank">_과장</span></div>
-          <div class="staff-item"><span class="staff-name">이우림</span><span class="staff-rank">_사원</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-      <!-- 성남 -->
-  <div class="campus campus-seongnam" style="flex:1.6;">
-    <div class="campus-header"><div class="campus-name">성남 CAMPUS</div><div class="campus-leader">김아리 부대표</div></div>
-    <div style="display:flex;gap:8px;">
-      <!-- 제형연구 -->
-      <div style="flex:1;">
-        <div class="dept-card theme-rnd" onclick="openModal('제형연구','Research & Development')" style="margin-bottom:0;">
-          <div class="dept-head"><div class="dept-kr">제형연구</div><div class="dept-en">Research &amp; Development</div></div>
-          <div class="dept-staff">
-            <div class="staff-item"><span class="staff-name">김아리</span><span class="staff-rank">_부대표</span><span class="staff-star">⭐</span></div>
-            <div class="staff-item"><span class="staff-name">김지아</span><span class="staff-rank">_책임연구원</span></div>
-            <div class="staff-item"><span class="staff-name">박진하</span><span class="staff-rank">_책임연구원</span></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 제조공장 + 하위부서들 -->
-      <div style="flex:2;">
-        <!-- 제조공장 헤더 -->
-        <div style="background:#f5b8c8;border-radius:10px 10px 0 0;padding:7px 10px;text-align:center;border:1.5px solid #f5b8c8;cursor:pointer;" onclick="openModal('제조공장','Manufacture Division')">
-          <div style="font-size:11px;font-weight:700;color:#7a1a35;">제조공장</div>
-          <div style="font-size:9px;color:#9e2848;opacity:0.85;">Manufacture Division</div>
-        </div>
-        <!-- 제조공장 멤버 -->
-        <div style="background:#fff;padding:6px 9px;border:1.5px solid #f5b8c8;border-top:none;margin-bottom:6px;">
-          <div class="staff-item"><span class="staff-name">홍순기</span><span class="staff-rank">_부장(공장장)</span><span class="staff-star">⭐</span></div>
-        </div>
-
-        <!-- 하위 부서 2열 -->
-        <div style="display:flex;gap:6px;margin-bottom:6px;">
-          <div class="dept-card theme-mgmt" style="flex:1;" onclick="openModal('생산관리','Manufacture Management')">
-            <div class="dept-head"><div class="dept-kr">생산관리</div><div class="dept-en">Manufacture Mgmt</div></div>
-            <div class="dept-staff">
-              <div class="staff-item"><span class="staff-name">고정인</span><span class="staff-rank">_대리</span></div>
-              <div class="staff-item"><span class="staff-name">김윤서</span><span class="staff-rank">_대리</span></div>
-              <div class="staff-item"><span class="staff-name">최제열</span><span class="staff-rank">_과장</span></div>
-            </div>
-          </div>
-          <div class="dept-card theme-pur" style="flex:1;" onclick="openModal('구매','Purchasing')">
-            <div class="dept-head"><div class="dept-kr">구매</div><div class="dept-en">Purchasing</div></div>
-            <div class="dept-staff">
-              <div class="staff-item"><span class="staff-name">이주석</span><span class="staff-rank">_대리</span></div>
-              <div class="staff-item"><span class="staff-name">최다희</span><span class="staff-rank">_대리</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="display:flex;gap:6px;">
-          <div class="dept-card theme-prod" style="flex:1;" onclick="openModal('제조','Production')">
-            <div class="dept-head"><div class="dept-kr">제조</div><div class="dept-en">Production</div></div>
-            <div class="dept-staff">
-              <div class="staff-item"><span class="staff-name">정의찬</span><span class="staff-rank">_차장(팀장)</span><span class="staff-star">⭐</span></div>
-              <div class="staff-item"><span class="staff-name">정귀오</span><span class="staff-rank">_대리</span></div>
-            </div>
-          </div>
-          <div class="dept-card theme-log" style="flex:1;" onclick="openModal('물류','Logistics')">
-            <div class="dept-head"><div class="dept-kr">물류</div><div class="dept-en">Logistics</div></div>
-            <div class="dept-staff">
-              <div class="staff-item"><span class="staff-name">신의철</span><span class="staff-rank">_과장</span></div>
-            </div>
-          </div>
-          <div class="dept-card theme-qa" style="flex:1;" onclick="openModal('품질','Quality Assurance')">
-            <div class="dept-head"><div class="dept-kr">품질</div><div class="dept-en">QA</div></div>
-            <div class="dept-staff">
-              <div class="staff-item"><span class="staff-name">홍순기</span><span class="staff-rank">_부장(공장장)</span><span class="staff-star">⭐</span></div>
-              <div class="staff-item"><span class="staff-name">정언식</span><span class="staff-rank">_차장(팀장)</span><span class="staff-star">⭐</span></div>
-              <div class="staff-item"><span class="staff-name">고정인</span><span class="staff-rank">_대리</span></div>
-              <div class="staff-item"><span class="staff-name">김미란</span><span class="staff-rank">_대리</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+<!-- 캠퍼스 -->
+<div class="campuses" id="campusContainer">
+  <div style="text-align:center;color:#bbb;font-size:13px;padding:40px;width:100%;">조직도 불러오는 중...</div>
 </div>
 
 <div class="legend">
   <div class="legend-item"><span>⭐</span> 팀장 / 리더</div>
   <div class="legend-item">💡 부서 카드 클릭 시 상세 R&R 확인 가능</div>
+  <div class="legend-item" style="margin-left:auto;color:#bbb;font-size:10px;font-style:italic;">* 제형연구 윤홍건_연구원 (현재 미근무)</div>
 </div>
 
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbwp7lVz8Wu5ngszztKGQ8Z2j_kywrD7D6kc8usalW0axd0aKCfmfSabJsKTnMVIw-vzrg/exec';
 
-// 부서명 매핑 (조직도 표시명 → 시트 부서명)
-const DEPT_MAP = {
-  '전략':              ['전략 기획', '전략팀'],
-  '인사':              ['경영지원\n인사 / 총무 전반', '인사 / 총무', '인사'],
-  '재무':              ['경영지원\n재무 / 회계 전반', '경영지원\nFI', '경영지원FI', '재무'],
-  '브랜드 매니지먼트팀': ['브랜드 매니지먼트', 'IDENEL', '브랜드매니지먼트', 'DENEL'],
-  '운영지원':          ['운영지원'],
-  'SALES 1팀':         ['SALES 1팀', 'Sales 1'],
-  'SALES 2팀':         ['SALES 2팀', 'Sales 2'],
-  'SALES 3팀':         ['SALES 3팀', 'Sales 3'],
-  'Bio Center':        ['신소재 개발팀\nBIO CENTER', 'BIO CENTER', '신소재 개발'],
-  '알텀공장':          ['알텀공장', '합성'],
-  '제형연구':          ['제형연구'],
-  '생산관리':          ['생산관리'],
-  '구매':              ['구매팀PU', '구매'],
-  '제조':              ['제조팀PD', '제조팀', '제조'],
-  '물류':              ['물류'],
-  '제조공장':          ['제조공장'],
-  '품질':              ['품질보증', '품질'],
+// 부서 설정 (순서, 테마, 한글명, 영문명, 캠퍼스, 팀장 여부 판단용 리더키워드)
+const DEPT_CONFIG = {
+  '전략 기획':                    { kr:'전략', en:'Strategic', theme:'theme-strategic', campus:'gangnam', leaders:['노서희'] },
+  '경영지원\n인사 / 총무 전반':   { kr:'인사', en:'Human Resource', theme:'theme-hr', campus:'gangnam', leaders:['김석원'] },
+  '경영지원\n재무 / 회계 전반':   { kr:'재무', en:'Finance', theme:'theme-finance', campus:'gangnam', leaders:['고대진'] },
+  'IDENEL':                       { kr:'브랜드 매니지먼트팀', en:'Brand Management', theme:'theme-brand', campus:'gangnam', leaders:['최희정'] },
+  '운영지원':                     { kr:'운영지원', en:'Operations Support', theme:'theme-ops', campus:'gangnam', leaders:['김아리'] },
+  'SALES 1팀':                    { kr:'SALES 1팀', en:'Sales Team 1', theme:'theme-sales', campus:'gangnam', leaders:['김아리'] },
+  'SALES 2팀':                    { kr:'SALES 2팀', en:'Sales Team 2', theme:'theme-sales', campus:'gangnam', leaders:['임다정'] },
+  'SALES 3팀':                    { kr:'SALES 3팀', en:'Sales Team 3', theme:'theme-sales', campus:'gangnam', leaders:['베카'] },
+  '신소재 개발팀\nBIO CENTER':    { kr:'신소재 개발 Bio Center', en:'New Material Development', theme:'theme-bio', campus:'gwangyo', leaders:['박가민'] },
+  '알텀공장':                     { kr:'알텀공장', en:'Altum Plant', theme:'theme-altum', campus:'gwangyo', leaders:[] },
+  '제형연구':                     { kr:'제형연구', en:'Research & Development', theme:'theme-rnd', campus:'seongnam', leaders:['김아리'], exclude:['윤홍건'] },
+  '제조공장':                     { kr:'제조공장', en:'Manufacture Division', theme:'theme-mfg', campus:'seongnam', leaders:['홍순기'], onlyLeader:true },
+  '제조/생산관리/물류\n총괄':     { kr:'제조공장', en:'Manufacture Division', theme:'theme-mfg', campus:'seongnam', leaders:['홍순기'], onlyLeader:true },
+  '생산관리\nMM':                 { kr:'생산관리', en:'Manufacture Management', theme:'theme-mgmt', campus:'seongnam', leaders:[], exclude:['고정인','김윤서'] },
+  '구매팀PU':                     { kr:'구매', en:'Purchasing', theme:'theme-pur', campus:'seongnam', leaders:[] },
+  '제조팀PD':                     { kr:'제조', en:'Production', theme:'theme-prod', campus:'seongnam', leaders:['정의찬'] },
+  '물류팀':                       { kr:'물류', en:'Logistics', theme:'theme-log', campus:'seongnam', leaders:[] },
+  '품질보증':                     { kr:'품질', en:'Quality Assurance', theme:'theme-qa', campus:'seongnam', leaders:['홍순기'] },
+};
+
+// 캠퍼스 레이아웃 설정
+const CAMPUS_CONFIG = {
+  gangnam:  { name:'강남 CAMPUS', leader:'이소형 대표', class:'campus-gangnam', flex:'2.2' },
+  gwangyo:  { name:'광교 CAMPUS', leader:'박가민 부장 (센터장)', class:'campus-gwangyo', flex:'1' },
+  seongnam: { name:'성남 CAMPUS', leader:'김아리 부대표', class:'campus-seongnam', flex:'1.6' },
 };
 
 let sheetData = null;
@@ -410,73 +161,174 @@ async function loadData() {
   try {
     const res = await fetch(API_URL);
     sheetData = await res.json();
-  } catch(e) {
-    sheetData = [];
-  }
+  } catch(e) { sheetData = []; }
   return sheetData;
 }
 
-function openModal(deptKr, deptEn) {
+// 부서 카드 HTML 생성
+function makeDeptCard(deptKey, members) {
+  const cfg = DEPT_CONFIG[deptKey];
+  if (!cfg) return '';
+
+  // 제외 인원 필터
+  let filtered = members.filter(m => !(cfg.exclude || []).includes(m.name));
+  // onlyLeader 옵션 (제조공장: 홍순기만 표시)
+  if (cfg.onlyLeader) filtered = filtered.filter(m => (cfg.leaders || []).includes(m.name));
+
+  const staffHTML = filtered.map(m => {
+    const isLeader = (cfg.leaders || []).includes(m.name);
+    return `<div class="staff-item">
+      <span class="staff-name">${m.name}</span><span class="staff-rank">_${m.rank||''}</span>${isLeader ? '<span class="staff-star">⭐</span>' : ''}
+    </div>`;
+  }).join('');
+
+  return `<div class="dept-card ${cfg.theme}" onclick="openModal('${deptKey}','${cfg.kr}','${cfg.en}')">
+    <div class="dept-head">
+      <div class="dept-kr">${cfg.kr}</div>
+      <div class="dept-en">${cfg.en}</div>
+    </div>
+    <div class="dept-staff">${staffHTML || '<div class="loading-card">-</div>'}</div>
+  </div>`;
+}
+
+// 조직도 렌더링
+async function renderOrgChart() {
+  const data = await loadData();
+
+  // 부서별 멤버 그룹핑
+  const deptMembers = {};
+  for (const key of Object.keys(DEPT_CONFIG)) deptMembers[key] = [];
+
+  data.forEach(m => {
+    const d = String(m.dept || '').trim();
+    for (const key of Object.keys(DEPT_CONFIG)) {
+      if (d === key || d.includes(key.split('\n')[0])) {
+        if (!deptMembers[key].find(x => x.name === m.name)) {
+          deptMembers[key].push(m);
+        }
+        break;
+      }
+    }
+  });
+
+  // 캠퍼스별 HTML 생성
+  const campusHTML = {};
+  for (const [camp, cfg] of Object.entries(CAMPUS_CONFIG)) {
+    const depts = Object.keys(DEPT_CONFIG).filter(k => DEPT_CONFIG[k].campus === camp);
+    campusHTML[camp] = depts.map(k => makeDeptCard(k, deptMembers[k])).join('');
+  }
+
+  // 강남 레이아웃
+  const gangnamHTML = `
+    <div class="campus campus-gangnam" style="flex:2.2;">
+      <div class="campus-header"><div class="campus-name">강남 CAMPUS</div><div class="campus-leader">이소형 대표</div></div>
+      <div style="display:flex;gap:8px;margin-bottom:8px;">
+        <div style="flex:2;">${makeDeptCard('전략 기획', deptMembers['전략 기획'])}</div>
+        <div style="display:flex;flex-direction:column;gap:8px;flex:1;">
+          ${makeDeptCard('경영지원\n인사 / 총무 전반', deptMembers['경영지원\n인사 / 총무 전반'])}
+          ${makeDeptCard('경영지원\n재무 / 회계 전반', deptMembers['경영지원\n재무 / 회계 전반'])}
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:8px;">
+        <div style="flex:1.5;">${makeDeptCard('IDENEL', deptMembers['IDENEL'])}</div>
+        <div style="flex:1;">${makeDeptCard('운영지원', deptMembers['운영지원'])}</div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <div style="flex:1;">${makeDeptCard('SALES 1팀', deptMembers['SALES 1팀'])}</div>
+        <div style="flex:1;">${makeDeptCard('SALES 2팀', deptMembers['SALES 2팀'])}</div>
+        <div style="flex:1;">${makeDeptCard('SALES 3팀', deptMembers['SALES 3팀'])}</div>
+      </div>
+    </div>`;
+
+  // 광교 레이아웃
+  const gwaнgyoHTML = `
+    <div class="campus campus-gwangyo" style="flex:1;">
+      <div class="campus-header"><div class="campus-name">광교 CAMPUS</div><div class="campus-leader">박가민 부장 (센터장)</div></div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        ${makeDeptCard('신소재 개발팀\nBIO CENTER', deptMembers['신소재 개발팀\nBIO CENTER'])}
+        ${makeDeptCard('알텀공장', deptMembers['알텀공장'])}
+      </div>
+    </div>`;
+
+  // 성남 레이아웃
+  const seongnamHTML = `
+    <div class="campus campus-seongnam" style="flex:1.6;">
+      <div class="campus-header"><div class="campus-name">성남 CAMPUS</div><div class="campus-leader">김아리 부대표</div></div>
+      <div style="display:flex;gap:8px;">
+        <div style="flex:1;">
+          ${makeDeptCard('제형연구', deptMembers['제형연구'])}
+        </div>
+        <div style="flex:2;">
+          <div style="background:#f5b8c8;border-radius:10px 10px 0 0;padding:7px 10px;text-align:center;border:1.5px solid #f5b8c8;cursor:pointer;" onclick="openModal('제조공장','제조공장','Manufacture Division')">
+            <div style="font-size:11px;font-weight:700;color:#7a1a35;">제조공장</div>
+            <div style="font-size:9px;color:#9e2848;opacity:0.85;">Manufacture Division</div>
+          </div>
+          <div style="background:#fff;padding:6px 9px;border:1.5px solid #f5b8c8;border-top:none;margin-bottom:6px;">
+            ${(deptMembers['제조공장'].filter(m => m.name === '홍순기')).map(m =>
+              `<div class="staff-item"><span class="staff-name">${m.name}</span><span class="staff-rank">_${m.rank||''}</span><span class="staff-star">⭐</span></div>`
+            ).join('')}
+          </div>
+          <div style="display:flex;gap:6px;margin-bottom:6px;">
+            <div style="flex:1;">${makeDeptCard('생산관리\nMM', deptMembers['생산관리\nMM'])}</div>
+            <div style="flex:1;">${makeDeptCard('구매팀PU', deptMembers['구매팀PU'])}</div>
+          </div>
+          <div style="display:flex;gap:6px;">
+            <div style="flex:1;">${makeDeptCard('제조팀PD', deptMembers['제조팀PD'])}</div>
+            <div style="flex:1;">${makeDeptCard('물류팀', deptMembers['물류팀'])}</div>
+            <div style="flex:1;">${makeDeptCard('품질보증', deptMembers['품질보증'])}</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+
+  document.getElementById('campusContainer').innerHTML = gangnamHTML + gwaнgyoHTML + seongnamHTML;
+}
+
+// 팝업
+function openModal(deptKey, deptKr, deptEn) {
   const overlay = document.getElementById('modalOverlay');
-  const title   = document.getElementById('modalTitle');
-  const content = document.getElementById('modalContent');
-  title.textContent = deptKr + (deptEn ? '  ·  ' + deptEn : '');
-  content.innerHTML = '<div class="loading">데이터 불러오는 중...</div>';
+  document.getElementById('modalTitle').textContent = deptKr + (deptEn ? '  ·  ' + deptEn : '');
+  document.getElementById('modalContent').innerHTML = '<div class="loading">데이터 불러오는 중...</div>';
   overlay.classList.add('show');
 
   loadData().then(data => {
-    const keys = DEPT_MAP[deptKr] || [deptKr];
-    const members = data.filter(r => {
-      const d = String(r.dept || '').trim();
-      return keys.some(k => d.includes(k));
-    });
+    const cfg = DEPT_CONFIG[deptKey] || {};
+    const members = data.filter(m => {
+      const d = String(m.dept || '').trim();
+      return d === deptKey || d.includes(deptKey.split('\n')[0]) || 
+             (deptKey === '제조공장' && d.includes('제조/생산관리/물류'));
+    }).filter(m => !(cfg.exclude || []).includes(m.name));
 
     if (!members.length) {
-      content.innerHTML = '<div class="loading">해당 부서 데이터가 없습니다.<br>시트의 부서명을 확인해주세요.</div>';
+      document.getElementById('modalContent').innerHTML = '<div class="loading">데이터가 없습니다.</div>';
       return;
     }
 
-    content.innerHTML = members.map(m => {
-      const isLeader = String(m.rank||'').includes('부장') || String(m.rank||'').includes('과장') ||
-                       String(m.rank||'').includes('부대표') || String(m.rank||'').includes('센터장') ||
-                       String(m.rank||'').includes('차장') || String(m.rank||'').includes('대표');
+    document.getElementById('modalContent').innerHTML = members.map(m => {
       const rrLines = String(m.rr||'').trim().split('\n').filter(Boolean);
-
-      return `
-        <div class="modal-person">
-          <div class="modal-person-header">
-            <span class="modal-person-name">${m.name||''}</span>
-            <span class="modal-person-rank ${m.rank ? 'leader' : ''}">${m.phone || '-'}</span>
-          </div>
-          <div class="modal-info-row">
-            <span class="modal-info-label">직급</span>
-            <span class="modal-info-value">${m.rank || '-'}</span>
-          </div>
-          <div class="modal-info-row">
-            <span class="modal-info-label">연락처</span>
-            <span class="modal-info-value">${m.phone || '-'}</span>
-          </div>
-          <div class="modal-info-row">
-            <span class="modal-info-label">내선</span>
-            <span class="modal-info-value">${m.ext || '-'}</span>
-          </div>
-          ${rrLines.length ? `
-          <div class="modal-rr">
-            <div class="modal-rr-label">R&R (담당 업무)</div>
-            ${rrLines.map(l => `<div>• ${l.replace(/^[-•]\s*/,'')}</div>`).join('')}
-          </div>` : ''}
-        </div>`;
+      return `<div class="modal-person">
+        <div class="modal-person-header">
+          <span class="modal-person-name">${m.name||''}</span>
+          <span class="modal-person-rank">${m.phone || '-'}</span>
+        </div>
+        <div class="modal-info-row"><span class="modal-info-label">직급</span><span class="modal-info-value">${m.rank || '-'}</span></div>
+        <div class="modal-info-row"><span class="modal-info-label">연락처</span><span class="modal-info-value">${m.phone || '-'}</span></div>
+        <div class="modal-info-row"><span class="modal-info-label">내선</span><span class="modal-info-value">${m.ext || '-'}</span></div>
+        ${rrLines.length ? `<div class="modal-rr">
+          <div class="modal-rr-label">R&R (담당 업무)</div>
+          ${rrLines.map(l => `<div>• ${l.replace(/^[-•]\s*/,'')}</div>`).join('')}
+        </div>` : ''}
+      </div>`;
     }).join('');
   });
 }
 
-function closeModal(e) {
-  if (e.target === document.getElementById('modalOverlay')) closeModalDirect();
-}
-function closeModalDirect() {
-  document.getElementById('modalOverlay').classList.remove('show');
-}
+function closeModal(e) { if (e.target === document.getElementById('modalOverlay')) closeModalDirect(); }
+function closeModalDirect() { document.getElementById('modalOverlay').classList.remove('show'); }
 document.addEventListener('keydown', e => { if(e.key==='Escape') closeModalDirect(); });
+
+// 초기 렌더링
+renderOrgChart();
 </script>
 </body>
 </html>
