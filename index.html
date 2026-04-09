@@ -140,9 +140,13 @@ function normDept(str) {
 
 // 멤버의 dept가 configKey에 매칭되는지
 function matchDept(memberDept, configKey) {
-  var d = normDept(memberDept);
-  var k = normDept(configKey);
-  return d === k;
+  var d = String(memberDept || '').trim();
+  var k = String(configKey || '').trim();
+  if (d === k) return true;
+  var dFirst = d.split('\n')[0].trim();
+  if (dFirst === k) return true;
+  if (dFirst.indexOf(k) === 0) return true;
+  return false;
 }
 
 var sheetData = null;
