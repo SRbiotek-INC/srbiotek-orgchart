@@ -174,12 +174,16 @@ function makeStaffHTML(members, leaders) {
   }).join('');
 }
 
+function keyToId(key) {
+  return 'staff-' + key.replace(/[^a-zA-Z0-9가-힣]/g, '_');
+}
+
 function makeDeptCard(key) {
   var cfg = DEPT_CONFIG[key];
   if (!cfg) return '';
-  return '<div class="dept-card ' + cfg.theme + '" onclick="openModal(\'' + key + '\')">' +
+  return '<div class="dept-card ' + cfg.theme + '" onclick="openModal(\'' + key.replace(/'/g,"\\'") + '\')">' +
     '<div class="dept-head"><div class="dept-kr">' + cfg.kr + '</div><div class="dept-en">' + cfg.en + '</div></div>' +
-    '<div class="dept-staff" id="staff-' + key.replace(/\s/g,'_') + '"><div style="font-size:10px;color:#bbb;text-align:center;">로딩중</div></div>' +
+    '<div class="dept-staff" id="' + keyToId(key) + '"><div style="font-size:10px;color:#bbb;text-align:center;">로딩중</div></div>' +
     '</div>';
 }
 
@@ -250,7 +254,7 @@ function renderOrgChart() {
     // 각 부서 직원 렌더링
     Object.keys(DEPT_CONFIG).forEach(function(key) {
       var cfg = DEPT_CONFIG[key];
-      var el = document.getElementById('staff-' + key.replace(/\s/g,'_'));
+      var el = document.getElementById(keyToId(key));
       if (!el) return;
       var members = getMembersByKey(data, key);
       el.innerHTML = makeStaffHTML(members, cfg.leaders || []);
