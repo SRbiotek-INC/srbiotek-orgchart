@@ -284,8 +284,8 @@
         <div class="dept-staff">
           <div class="staff-item"><span class="staff-name">박가민</span><span class="staff-rank">_부장(센터장)</span><span class="staff-star">⭐</span></div>
           <div class="staff-item"><span class="staff-name">정윤조</span><span class="staff-rank">_책임연구원</span></div>
-          <div class="staff-item"><span class="staff-name">박찬후</span><span class="staff-rank">_연구원</span></div>
-          <div class="staff-item"><span class="staff-name">윤홍건</span><span class="staff-rank">_연구원</span></div>
+                    <div class="staff-item"><span class="staff-name">박찬후</span><span class="staff-rank">_연구원</span></div>
+          
         </div>
       </div>
       <div class="dept-card theme-altum" onclick="openModal('알텀공장','Altum Plant')">
@@ -299,69 +299,74 @@
     </div>
   </div>
 
-  <!-- 성남 -->
+      <!-- 성남 -->
   <div class="campus campus-seongnam" style="flex:1.6;">
     <div class="campus-header"><div class="campus-name">성남 CAMPUS</div><div class="campus-leader">김아리 부대표</div></div>
     <div style="display:flex;gap:8px;">
-      <div style="display:flex;flex-direction:column;gap:8px;flex:1;">
-        <div class="dept-card theme-rnd" onclick="openModal('제형연구','Research & Development')">
+      <!-- 제형연구 -->
+      <div style="flex:1;">
+        <div class="dept-card theme-rnd" onclick="openModal('제형연구','Research & Development')" style="margin-bottom:0;">
           <div class="dept-head"><div class="dept-kr">제형연구</div><div class="dept-en">Research &amp; Development</div></div>
           <div class="dept-staff">
             <div class="staff-item"><span class="staff-name">김아리</span><span class="staff-rank">_부대표</span><span class="staff-star">⭐</span></div>
             <div class="staff-item"><span class="staff-name">김지아</span><span class="staff-rank">_책임연구원</span></div>
             <div class="staff-item"><span class="staff-name">박진하</span><span class="staff-rank">_책임연구원</span></div>
-            <div class="staff-item"><span class="staff-name">윤홍건</span><span class="staff-rank">_연구원</span></div>
-          </div>
-        </div>
-        <div class="dept-card theme-mgmt" onclick="openModal('생산관리','Manufacture Management')">
-          <div class="dept-head"><div class="dept-kr">생산관리</div><div class="dept-en">Manufacture Management</div></div>
-          <div class="dept-staff">
-            <div class="staff-item"><span class="staff-name">고정인</span><span class="staff-rank">_대리</span></div>
-            <div class="staff-item"><span class="staff-name">김윤서</span><span class="staff-rank">_대리</span></div>
-            <div class="staff-item"><span class="staff-name">최제열</span><span class="staff-rank">_과장</span></div>
-          </div>
-        </div>
-        <div class="dept-card theme-pur" onclick="openModal('구매','Purchasing')">
-          <div class="dept-head"><div class="dept-kr">구매</div><div class="dept-en">Purchasing</div></div>
-          <div class="dept-staff">
-            <div class="staff-item"><span class="staff-name">이주석</span><span class="staff-rank">_대리</span></div>
-            <div class="staff-item"><span class="staff-name">최다희</span><span class="staff-rank">_대리</span></div>
-          </div>
-        </div>
-        <div class="dept-card theme-prod" onclick="openModal('제조','Production')">
-          <div class="dept-head"><div class="dept-kr">제조</div><div class="dept-en">Production</div></div>
-          <div class="dept-staff">
-            <div class="staff-item"><span class="staff-name">정의찬</span><span class="staff-rank">_차장(팀장)</span><span class="staff-star">⭐</span></div>
-            <div class="staff-item"><span class="staff-name">정귀오</span><span class="staff-rank">_대리</span></div>
-          </div>
-        </div>
-        <div class="dept-card theme-log" onclick="openModal('물류','Logistics')">
-          <div class="dept-head"><div class="dept-kr">물류</div><div class="dept-en">Logistics</div></div>
-          <div class="dept-staff">
-            <div class="staff-item"><span class="staff-name">신의철</span><span class="staff-rank">_과장</span></div>
           </div>
         </div>
       </div>
-      <div style="display:flex;flex-direction:column;gap:8px;flex:1;">
-        <div class="dept-card theme-mfg" onclick="openModal('제조공장','Manufacture Division')">
-          <div class="dept-head"><div class="dept-kr">제조공장</div><div class="dept-en">Manufacture Division</div></div>
-          <div class="dept-staff">
-            <div class="staff-item"><span class="staff-name">홍순기</span><span class="staff-rank">_부장(공장장)</span><span class="staff-star">⭐</span></div>
-            <div class="staff-item"><span class="staff-name">정언식</span><span class="staff-rank">_차장(팀장)</span><span class="staff-star">⭐</span></div>
-            <div class="staff-item"><span class="staff-name">박나리</span><span class="staff-rank">_과장</span></div>
-            <div class="staff-item"><span class="staff-name">박상은</span><span class="staff-rank">_대리</span></div>
-            <div class="staff-item"><span class="staff-name">정선아</span><span class="staff-rank">_대리</span></div>
-            <div class="staff-item"><span class="staff-name">정슬기</span><span class="staff-rank">_대리</span></div>
-            <div class="staff-item"><span class="staff-name">김미란</span><span class="staff-rank">_대리</span></div>
+
+      <!-- 제조공장 + 하위부서들 -->
+      <div style="flex:2;">
+        <!-- 제조공장 헤더 -->
+        <div style="background:#f5b8c8;border-radius:10px 10px 0 0;padding:7px 10px;text-align:center;border:1.5px solid #f5b8c8;cursor:pointer;" onclick="openModal('제조공장','Manufacture Division')">
+          <div style="font-size:11px;font-weight:700;color:#7a1a35;">제조공장</div>
+          <div style="font-size:9px;color:#9e2848;opacity:0.85;">Manufacture Division</div>
+        </div>
+        <!-- 제조공장 멤버 -->
+        <div style="background:#fff;padding:6px 9px;border:1.5px solid #f5b8c8;border-top:none;margin-bottom:6px;">
+          <div class="staff-item"><span class="staff-name">홍순기</span><span class="staff-rank">_부장(공장장)</span><span class="staff-star">⭐</span></div>
+        </div>
+
+        <!-- 하위 부서 2열 -->
+        <div style="display:flex;gap:6px;margin-bottom:6px;">
+          <div class="dept-card theme-mgmt" style="flex:1;" onclick="openModal('생산관리','Manufacture Management')">
+            <div class="dept-head"><div class="dept-kr">생산관리</div><div class="dept-en">Manufacture Mgmt</div></div>
+            <div class="dept-staff">
+              <div class="staff-item"><span class="staff-name">고정인</span><span class="staff-rank">_대리</span></div>
+              <div class="staff-item"><span class="staff-name">김윤서</span><span class="staff-rank">_대리</span></div>
+              <div class="staff-item"><span class="staff-name">최제열</span><span class="staff-rank">_과장</span></div>
+            </div>
+          </div>
+          <div class="dept-card theme-pur" style="flex:1;" onclick="openModal('구매','Purchasing')">
+            <div class="dept-head"><div class="dept-kr">구매</div><div class="dept-en">Purchasing</div></div>
+            <div class="dept-staff">
+              <div class="staff-item"><span class="staff-name">이주석</span><span class="staff-rank">_대리</span></div>
+              <div class="staff-item"><span class="staff-name">최다희</span><span class="staff-rank">_대리</span></div>
+            </div>
           </div>
         </div>
-        <div class="dept-card theme-qa" onclick="openModal('품질','Quality Assurance')">
-          <div class="dept-head"><div class="dept-kr">품질</div><div class="dept-en">Quality Assurance</div></div>
-          <div class="dept-staff">
-            <div class="staff-item"><span class="staff-name">홍순기</span><span class="staff-rank">_부장(공장장)</span><span class="staff-star">⭐</span></div>
-            <div class="staff-item"><span class="staff-name">정언식</span><span class="staff-rank">_차장(팀장)</span><span class="staff-star">⭐</span></div>
-            <div class="staff-item"><span class="staff-name">고정인</span><span class="staff-rank">_대리</span></div>
-            <div class="staff-item"><span class="staff-name">김미란</span><span class="staff-rank">_대리</span></div>
+        <div style="display:flex;gap:6px;">
+          <div class="dept-card theme-prod" style="flex:1;" onclick="openModal('제조','Production')">
+            <div class="dept-head"><div class="dept-kr">제조</div><div class="dept-en">Production</div></div>
+            <div class="dept-staff">
+              <div class="staff-item"><span class="staff-name">정의찬</span><span class="staff-rank">_차장(팀장)</span><span class="staff-star">⭐</span></div>
+              <div class="staff-item"><span class="staff-name">정귀오</span><span class="staff-rank">_대리</span></div>
+            </div>
+          </div>
+          <div class="dept-card theme-log" style="flex:1;" onclick="openModal('물류','Logistics')">
+            <div class="dept-head"><div class="dept-kr">물류</div><div class="dept-en">Logistics</div></div>
+            <div class="dept-staff">
+              <div class="staff-item"><span class="staff-name">신의철</span><span class="staff-rank">_과장</span></div>
+            </div>
+          </div>
+          <div class="dept-card theme-qa" style="flex:1;" onclick="openModal('품질','Quality Assurance')">
+            <div class="dept-head"><div class="dept-kr">품질</div><div class="dept-en">QA</div></div>
+            <div class="dept-staff">
+              <div class="staff-item"><span class="staff-name">홍순기</span><span class="staff-rank">_부장(공장장)</span><span class="staff-star">⭐</span></div>
+              <div class="staff-item"><span class="staff-name">정언식</span><span class="staff-rank">_차장(팀장)</span><span class="staff-star">⭐</span></div>
+              <div class="staff-item"><span class="staff-name">고정인</span><span class="staff-rank">_대리</span></div>
+              <div class="staff-item"><span class="staff-name">김미란</span><span class="staff-rank">_대리</span></div>
+            </div>
           </div>
         </div>
       </div>
@@ -381,7 +386,7 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbwp7lVz8Wu5ngszztKGQ8Z2
 const DEPT_MAP = {
   '전략':              ['전략팀'],
   '인사':              ['경영지원\n인사 / 총무 전반', '인사 / 총무'],
-  '재무':              ['경영지원\nFI', '경영지원FI'],
+  '재무':              ['경영지원\n재무 / 회계 전반', '경영지원\nFI', '경영지원FI'],
   '브랜드 매니지먼트팀': ['브랜드 매니지먼트', 'IDENEL', '브랜드매니지먼트'],
   '운영지원':          ['운영지원'],
   'SALES 1팀':         ['SALES 1팀'],
