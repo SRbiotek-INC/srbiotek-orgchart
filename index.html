@@ -129,8 +129,7 @@ var DC = {
   'FI':                  {kr:'재무',           en:'Finance',               th:'theme-finance',   L:['고대진'],   X:[]},
   'IDENEL':              {kr:'브랜드 매니지먼트팀', en:'Brand Management',  th:'theme-brand',     L:['최희정'],   X:[]},
   '운영지원':            {kr:'운영지원',        en:'Operations Support',    th:'theme-ops',       L:['김아리'],   X:[]},
-  'SALES 1팀':           {kr:'SALES 1팀',      en:'Sales Team 1',          th:'theme-sales',     L:['김아리'],   X:[]},
-  'SALES 2팀':           {kr:'SALES 2팀',      en:'Sales Team 2',          th:'theme-sales',     L:['임다정'],   X:[]},
+  'SALES 1팀':           {kr:'SALES 1팀',      en:'Sales Team 1',          th:'theme-sales',     L:['김아리'],   X:[]},  'SALES 2팀':           {kr:'SALES 2팀',      en:'Sales Team 2',          th:'theme-sales',     L:['임다정'],   X:[]},
   'SALES 3팀':           {kr:'SALES 3팀',      en:'Sales Team 3',          th:'theme-sales',     L:['베카'],     X:[]},
   '신소재 개발팀':       {kr:'신소재 개발 Bio Center', en:'New Material Development', th:'theme-bio', L:['박가민'], X:[]},
   '합성':                {kr:'알텀공장',        en:'Altum Plant',           th:'theme-altum',     L:[],           X:[]},
@@ -154,11 +153,22 @@ function belongs(m, key) {
 
 function getMembers(data, key) {
   var cfg = DC[key];
-  return data.filter(function(m) { return belongs(m, key); })
+  var members = data.filter(function(m) { return belongs(m, key); })
     .filter(function(m) {
       if (cfg.onlyLeader) return cfg.L.indexOf(m.name) > -1;
       return cfg.X.indexOf(m.name) === -1;
     });
+
+  // 김아리님 SALES 1팀 / 운영지원 팀장 강제 추가
+  if (key === 'SALES 1팀' || key === '운영지원') {
+    var hasKimAri = members.find(function(m){ return m.name === '김아리'; });
+    if (!hasKimAri) {
+      var kimAri = data.find(function(m){ return m.name === '김아리'; });
+      if (kimAri) members.unshift(kimAri);
+    }
+  }
+
+  return members;
 }
 
 function staffHTML(members, leaders) {
