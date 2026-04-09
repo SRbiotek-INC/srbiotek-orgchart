@@ -1,328 +1,76 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SR biotek 조직도</title>
-<style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { padding: 28px 20px 40px; font-family: -apple-system, 'Segoe UI', sans-serif; background: #fff; }
-.logo-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
-.logo-text { font-size: 22px; font-weight: 700; color: #3d3d5c; letter-spacing: -0.5px; }
-.logo-sub { font-size: 13px; color: #aaa; }
-.divider { border: none; border-top: 1.5px solid #ece9f1; margin: 12px 0 24px; }
-.campuses { display: flex; gap: 14px; align-items: flex-start; }
-.campus { border-radius: 14px; padding: 13px; flex: 1; }
-.campus-gangnam { background: #f5f0ff; border: 1.5px solid #c9b8f5; }
-.campus-gwangyo { background: #f0faf5; border: 1.5px solid #a8dfc4; }
-.campus-seongnam { background: #fff7f0; border: 1.5px solid #f5c9a8; }
-.campus-header { text-align: center; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid rgba(0,0,0,0.06); }
-.campus-name { font-size: 11px; font-weight: 700; letter-spacing: 0.6px; margin-bottom: 2px; }
-.campus-gangnam .campus-name { color: #7c5cbf; }
-.campus-gwangyo .campus-name { color: #3a9068; }
-.campus-seongnam .campus-name { color: #c4763a; }
-.campus-leader { font-size: 11px; font-weight: 600; color: #555; }
-.dept-card { border-radius: 10px; overflow: hidden; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; }
-.dept-card:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.12); }
-.dept-head { padding: 7px 10px; text-align: center; }
-.dept-head .dept-kr { font-size: 11px; font-weight: 700; line-height: 1.35; }
-.dept-head .dept-en { font-size: 9px; font-weight: 400; opacity: 0.75; line-height: 1.3; margin-top: 1px; }
-.dept-staff { background: #fff; padding: 7px 9px; border: 1.5px solid; border-top: none; border-radius: 0 0 10px 10px; min-height: 30px; }
-.staff-item { font-size: 10px; line-height: 1.75; white-space: nowrap; display: flex; align-items: center; gap: 2px; }
-.staff-name { font-weight: 600; color: #3d3d5c; }
-.staff-rank { font-weight: 400; color: #888; }
-.staff-star { font-size: 10px; }
-.modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.45); z-index: 1000; align-items: center; justify-content: center; }
-.modal-overlay.show { display: flex; }
-.modal { background: #fff; border-radius: 16px; padding: 28px; width: 480px; max-width: 90vw; max-height: 80vh; overflow-y: auto; box-shadow: 0 8px 40px rgba(0,0,0,0.18); position: relative; }
-.modal-close { position: absolute; top: 16px; right: 18px; font-size: 20px; color: #aaa; cursor: pointer; background: none; border: none; }
-.modal-dept-title { font-size: 16px; font-weight: 700; color: #3d3d5c; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid #ece9f1; }
-.modal-person { background: #f8f7ff; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
-.modal-person-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-.modal-person-name { font-size: 15px; font-weight: 700; color: #3d3d5c; }
-.modal-person-rank { font-size: 11px; color: #fff; background: #6c63b6; border-radius: 20px; padding: 2px 9px; font-weight: 500; }
-.modal-info-row { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: #555; margin-bottom: 4px; line-height: 1.5; }
-.modal-info-label { font-weight: 600; color: #6c63b6; min-width: 44px; flex-shrink: 0; }
-.modal-info-value { color: #444; }
-.modal-rr { margin-top: 8px; padding-top: 8px; border-top: 1px solid #e5e1f5; font-size: 11px; color: #555; line-height: 1.7; }
-.modal-rr-label { font-weight: 700; color: #3d3d5c; margin-bottom: 4px; font-size: 12px; }
-.loading { text-align: center; color: #aaa; font-size: 13px; padding: 20px; }
-.theme-strategic .dept-head { background: #c8bbf5; } .theme-strategic .dept-head .dept-kr { color: #3b2d7a; } .theme-strategic .dept-head .dept-en { color: #5a4aa0; } .theme-strategic .dept-staff { border-color: #c8bbf5; }
-.theme-hr .dept-head { background: #f2b8d8; } .theme-hr .dept-head .dept-kr { color: #7a1f4e; } .theme-hr .dept-head .dept-en { color: #a0366a; } .theme-hr .dept-staff { border-color: #f2b8d8; }
-.theme-finance .dept-head { background: #a8e6cf; } .theme-finance .dept-head .dept-kr { color: #1a5c3a; } .theme-finance .dept-head .dept-en { color: #2e7a52; } .theme-finance .dept-staff { border-color: #a8e6cf; }
-.theme-brand .dept-head { background: #ffcba4; } .theme-brand .dept-head .dept-kr { color: #7a3310; } .theme-brand .dept-head .dept-en { color: #9e4a20; } .theme-brand .dept-staff { border-color: #ffcba4; }
-.theme-ops .dept-head { background: #b3dcf5; } .theme-ops .dept-head .dept-kr { color: #0e4068; } .theme-ops .dept-head .dept-en { color: #1a5a8a; } .theme-ops .dept-staff { border-color: #b3dcf5; }
-.theme-sales .dept-head { background: #ffb3b3; } .theme-sales .dept-head .dept-kr { color: #7a1a1a; } .theme-sales .dept-head .dept-en { color: #9e2a2a; } .theme-sales .dept-staff { border-color: #ffb3b3; }
-.theme-bio .dept-head { background: #b5e8c8; } .theme-bio .dept-head .dept-kr { color: #145230; } .theme-bio .dept-head .dept-en { color: #1e6e42; } .theme-bio .dept-staff { border-color: #b5e8c8; }
-.theme-altum .dept-head { background: #ffe49a; } .theme-altum .dept-head .dept-kr { color: #5c3c00; } .theme-altum .dept-head .dept-en { color: #7a5200; } .theme-altum .dept-staff { border-color: #ffe49a; }
-.theme-rnd .dept-head { background: #bdc8f5; } .theme-rnd .dept-head .dept-kr { color: #1a2670; } .theme-rnd .dept-head .dept-en { color: #2a3a8a; } .theme-rnd .dept-staff { border-color: #bdc8f5; }
-.theme-mfg .dept-head { background: #f5b8c8; } .theme-mfg .dept-head .dept-kr { color: #7a1a35; } .theme-mfg .dept-head .dept-en { color: #9e2848; } .theme-mfg .dept-staff { border-color: #f5b8c8; }
-.theme-qa .dept-head { background: #a8d4f5; } .theme-qa .dept-head .dept-kr { color: #0a3256; } .theme-qa .dept-head .dept-en { color: #164878; } .theme-qa .dept-staff { border-color: #a8d4f5; }
-.theme-mgmt .dept-head { background: #c8e6c0; } .theme-mgmt .dept-head .dept-kr { color: #1e4a18; } .theme-mgmt .dept-head .dept-en { color: #2c6224; } .theme-mgmt .dept-staff { border-color: #c8e6c0; }
-.theme-pur .dept-head { background: #e8d5b8; } .theme-pur .dept-head .dept-kr { color: #5c3c10; } .theme-pur .dept-head .dept-en { color: #7a521e; } .theme-pur .dept-staff { border-color: #e8d5b8; }
-.theme-prod .dept-head { background: #ffc8b0; } .theme-prod .dept-head .dept-kr { color: #7a2810; } .theme-prod .dept-head .dept-en { color: #9e3a1e; } .theme-prod .dept-staff { border-color: #ffc8b0; }
-.theme-log .dept-head { background: #c8d4e8; } .theme-log .dept-head .dept-kr { color: #1e2e50; } .theme-log .dept-head .dept-en { color: #2a3e6a; } .theme-log .dept-staff { border-color: #c8d4e8; }
-.legend { display: flex; gap: 16px; margin-top: 20px; padding-top: 12px; border-top: 1px solid #ece9f1; flex-wrap: wrap; align-items: center; }
-.legend-item { font-size: 10px; color: #999; display: flex; align-items: center; gap: 4px; }
-</style>
-</head>
-<body>
+function doGet() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
 
-<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModalDirect()">✕</button>
-    <div class="modal-dept-title" id="modalTitle"></div>
-    <div id="modalContent"><div class="loading">불러오는 중...</div></div>
-  </div>
-</div>
+  // ── 1. 조직도 시트에서 이름 + 직급 읽기 ──
+  const orgSheet = ss.getSheetByName("조직도");
+  const orgData  = orgSheet.getDataRange().getValues();
 
-<div class="logo-row">
-  <span class="logo-text">SR biotek</span>
-  <span class="logo-sub">Organization Chart</span>
-</div>
-<hr class="divider">
+  const rankMap = {};
+  const ranks = ['대표','부대표','부장','차장','과장','대리','사원','인턴','연구원','책임연구원','센터장','공장장','이사','CSO','COO','팀장'];
+  for (let i = 0; i < orgData.length; i++) {
+    const row = orgData[i];
+    for (let j = 0; j < row.length - 1; j++) {
+      const cell = String(row[j] || '').trim();
+      const next = String(row[j+1] || '').trim();
+      if (cell && next && ranks.some(r => next.includes(r))) {
+        rankMap[cell] = next;
+      }
+    }
+  }
 
-<div style="display:flex;align-items:flex-start;margin-bottom:20px;position:relative;min-height:70px;">
-  <div style="position:absolute;left:50%;transform:translateX(-50%);">
-    <div style="background:#6c63b6;border-radius:12px;padding:11px 32px;text-align:center;">
-      <div style="font-size:9px;color:#d4cfff;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:3px;">CEO</div>
-      <div style="font-size:16px;font-weight:700;color:#fff;">이소형</div>
-    </div>
-  </div>
-  <div style="display:flex;flex-direction:column;gap:5px;position:absolute;right:0;">
-    <div style="background:#d4cff0;border-radius:7px;padding:5px 12px;text-align:center;min-width:110px;">
-      <div style="font-size:8px;color:#5a4aa0;letter-spacing:0.8px;">연구총괄 CSO</div>
-      <div style="font-size:11px;font-weight:600;color:#3b2d7a;">송병호</div>
-    </div>
-    <div style="background:#d4cff0;border-radius:7px;padding:5px 12px;text-align:center;min-width:110px;">
-      <div style="font-size:8px;color:#5a4aa0;letter-spacing:0.8px;">사내이사</div>
-      <div style="font-size:11px;font-weight:600;color:#3b2d7a;">박현석 이사</div>
-    </div>
-  </div>
-</div>
+  // ── 2. R&R 시트에서 연락처 + R&R 읽기 ──
+  const rrSheet = ss.getSheetByName("3. 비상연락망 및 R&R");
+  const rrData  = rrSheet.getDataRange().getValues();
 
-<div class="campuses" id="campusContainer">
-  <div style="text-align:center;color:#bbb;font-size:13px;padding:40px;width:100%;">조직도 불러오는 중...</div>
-</div>
+  const result = [];
+  let currentDept   = '';
+  let currentDeptRR = '';
 
-<div class="legend">
-  <div class="legend-item"><span>⭐</span> 팀장 / 리더</div>
-  <div class="legend-item">💡 부서 카드 클릭 시 상세 R&R 확인 가능</div>
-  <div class="legend-item" style="margin-left:auto;color:#bbb;font-size:10px;font-style:italic;">* 제형연구 윤홍건_연구원 (현재 미근무)</div>
-</div>
+  for (let i = 1; i < rrData.length; i++) {
+    const row = rrData[i];
 
-<script>
-var API_URL = 'https://script.google.com/macros/s/AKfycbwp7lVz8Wu5ngszztKGQ8Z2j_kywrD7D6kc8usalW0axd0aKCfmfSabJsKTnMVIw-vzrg/exec';
+    const no     = row[1]; // B열 - 번호
+    const name   = String(row[2] || '').trim(); // C열 - 이름
+    const office = String(row[3] || '').trim(); // D열 - 사무실
+    const ext    = String(row[4] || '').trim(); // E열 - 내선
+    const phone  = String(row[5] || '').trim(); // F열 - 핸드폰
+    const dept   = String(row[6] || '').trim(); // G열 - 부서
+    const rr     = String(row[7] || '').trim(); // H열 - R&R
 
-var DEPT_CONFIG = {
-  '전략 기획':                  { kr:'전략', en:'Strategic', theme:'theme-strategic', leaders:['노서희'], exclude:[] },
-  '경영지원 인사 / 총무 전반':  { kr:'인사', en:'Human Resource', theme:'theme-hr', leaders:['김석원'], exclude:[] },
-  '경영지원 재무 / 회계 전반':  { kr:'재무', en:'Finance', theme:'theme-finance', leaders:['고대진'], exclude:[] },
-  'IDENEL':                     { kr:'브랜드 매니지먼트팀', en:'Brand Management', theme:'theme-brand', leaders:['최희정'], exclude:[] },
-  '운영지원':                   { kr:'운영지원', en:'Operations Support', theme:'theme-ops', leaders:['김아리'], exclude:[] },
-  'SALES 1팀':                  { kr:'SALES 1팀', en:'Sales Team 1', theme:'theme-sales', leaders:['김아리'], exclude:[] },
-  'SALES 2팀':                  { kr:'SALES 2팀', en:'Sales Team 2', theme:'theme-sales', leaders:['임다정'], exclude:[] },
-  'SALES 3팀':                  { kr:'SALES 3팀', en:'Sales Team 3', theme:'theme-sales', leaders:['베카'], exclude:[] },  '신소재 개발팀 BIO CENTER':   { kr:'신소재 개발 Bio Center', en:'New Material Development', theme:'theme-bio', leaders:['박가민'], exclude:[] },
-  '합성':                       { kr:'알텀공장', en:'Altum Plant', theme:'theme-altum', leaders:[], exclude:[] },
-  '제형연구':                   { kr:'제형연구', en:'Research & Development', theme:'theme-rnd', leaders:['김아리'], exclude:['윤홍건'] },
-  '제조 생산관리 물류 총괄':    { kr:'제조공장', en:'Manufacture Division', theme:'theme-mfg', leaders:['홍순기'], onlyLeader:true },
-  '생산관리 MM':                { kr:'생산관리', en:'Manufacture Management', theme:'theme-mgmt', leaders:[], exclude:['고정인','김윤서'] },
-  '구매팀 PU':                  { kr:'구매', en:'Purchasing', theme:'theme-pur', leaders:[], exclude:[] },
-  '제조팀':                     { kr:'제조', en:'Production', theme:'theme-prod', leaders:['정의찬'], exclude:[] },
-  '물류팀':                     { kr:'물류', en:'Logistics', theme:'theme-log', leaders:[], exclude:[] },
-  '품질보증':                   { kr:'품질', en:'Quality Assurance', theme:'theme-qa', leaders:['정언식'], exclude:['홍순기'], showInPopup:['홍순기'] },
-};
+    // 빈 행 건너뜀
+    if (!name) continue;
 
-// dept 값을 정규화 (줄바꿈, 공백 통일)
-function normDept(str) {
-  return String(str || '').trim().replace(/\n/g,' ').replace(/\s+/g,' ');
-}
+    // 부서명 업데이트 (G열에 값 있을 때)
+    if (dept) {
+      currentDept   = dept;
+      currentDeptRR = '';
+    }
 
-// 멤버의 dept가 configKey에 매칭되는지
-function matchDept(memberDept, configKey) {
-  var d = normDept(memberDept);
-  var k = normDept(configKey);
-  return d === k;
-}
+    // ★ 핵심: B열(No.)이 숫자인 행만 사람으로 처리
+    const noNum = Number(no);
+    if (!no || isNaN(noNum) || noNum <= 0) {
+      // 번호 없는 행 = 그룹메일/팀명 헤더 행 → R&R만 저장
+      if (rr) currentDeptRR = rr;
+      continue;
+    }
 
-var sheetData = null;
+    // 개인 R&R 없으면 부서 공통 R&R 사용
+    const finalRR = rr || currentDeptRR;
+    const rank = rankMap[name] || '';
 
-function loadData() {
-  if (sheetData) return Promise.resolve(sheetData);
-  return fetch(API_URL)
-    .then(function(r){ return r.json(); })
-    .then(function(d){ sheetData = d; return d; })
-    .catch(function(){ sheetData = []; return []; });
-}
-
-function getMembersByKey(data, key) {
-  var cfg = DEPT_CONFIG[key];
-  if (!cfg) return [];
-  return data.filter(function(m) {
-    return matchDept(m.dept, key);
-  }).filter(function(m) {
-    if (cfg.onlyLeader) return cfg.leaders.indexOf(m.name) > -1;
-    return (cfg.exclude || []).indexOf(m.name) === -1;
-  });
-}
-
-function makeStaffHTML(members, leaders) {
-  if (!members.length) return '<div style="font-size:10px;color:#bbb;text-align:center;padding:4px;">-</div>';
-  return members.map(function(m) {
-    var isLeader = leaders.indexOf(m.name) > -1;
-    return '<div class="staff-item"><span class="staff-name">' + m.name + '</span><span class="staff-rank">_' + (m.rank||'') + '</span>' + (isLeader ? '<span class="staff-star">⭐</span>' : '') + '</div>';
-  }).join('');
-}
-
-function keyToId(key) {
-  return 'staff-' + key.replace(/[^a-zA-Z0-9가-힣]/g, '_');
-}
-
-function makeDeptCard(key) {
-  var cfg = DEPT_CONFIG[key];
-  if (!cfg) return '';
-  return '<div class="dept-card ' + cfg.theme + '" onclick="openModal(\'' + key.replace(/'/g,"\\'") + '\')">' +
-    '<div class="dept-head"><div class="dept-kr">' + cfg.kr + '</div><div class="dept-en">' + cfg.en + '</div></div>' +
-    '<div class="dept-staff" id="' + keyToId(key) + '"><div style="font-size:10px;color:#bbb;text-align:center;">로딩중</div></div>' +
-    '</div>';
-}
-
-function renderOrgChart() {
-  loadData().then(function(data) {
-
-    // 강남
-    var gangnamHTML = '<div class="campus campus-gangnam" style="flex:2.2;">' +
-      '<div class="campus-header"><div class="campus-name">강남 CAMPUS</div><div class="campus-leader">이소형 대표</div></div>' +
-      '<div style="display:flex;gap:8px;margin-bottom:8px;">' +
-        '<div style="flex:2;">' + makeDeptCard('전략 기획') + '</div>' +
-        '<div style="display:flex;flex-direction:column;gap:8px;flex:1;">' +
-          makeDeptCard('경영지원 인사 / 총무 전반') +
-          makeDeptCard('경영지원 재무 / 회계 전반') +
-        '</div>' +
-      '</div>' +
-      '<div style="display:flex;gap:8px;margin-bottom:8px;">' +
-        '<div style="flex:1.5;">' + makeDeptCard('IDENEL') + '</div>' +
-        '<div style="flex:1;">' + makeDeptCard('운영지원') + '</div>' +
-      '</div>' +
-      '<div style="display:flex;gap:8px;">' +
-        '<div style="flex:1;">' + makeDeptCard('SALES 1팀') + '</div>' +
-        '<div style="flex:1;">' + makeDeptCard('SALES 2팀') + '</div>' +
-        '<div style="flex:1;">' + makeDeptCard('SALES 3팀') + '</div>' +
-      '</div>' +
-    '</div>';
-
-    // 광교
-    var gwaнgyoHTML = '<div class="campus campus-gwangyo" style="flex:1;">' +
-      '<div class="campus-header"><div class="campus-name">광교 CAMPUS</div><div class="campus-leader">박가민 부장 (센터장)</div></div>' +
-      '<div style="display:flex;flex-direction:column;gap:8px;">' +
-        makeDeptCard('신소재 개발팀 BIO CENTER') +
-        makeDeptCard('알텀공장') +
-      '</div>' +
-    '</div>';
-
-    // 성남 - 제조공장 헤더
-    var mfgMembers = getMembersByKey(data, '제조 생산관리 물류 총괄');
-    var mfgStaff = mfgMembers.map(function(m) {
-      return '<div class="staff-item"><span class="staff-name">' + m.name + '</span><span class="staff-rank">_' + (m.rank||'') + '</span><span class="staff-star">⭐</span></div>';
-    }).join('');
-
-    var seongnamHTML = '<div class="campus campus-seongnam" style="flex:1.6;">' +
-      '<div class="campus-header"><div class="campus-name">성남 CAMPUS</div><div class="campus-leader">김아리 부대표</div></div>' +
-      '<div style="display:flex;gap:8px;">' +
-        '<div style="flex:1;">' + makeDeptCard('제형연구') + '</div>' +
-        '<div style="flex:2;">' +
-          '<div style="background:#f5b8c8;border-radius:10px 10px 0 0;padding:7px 10px;text-align:center;border:1.5px solid #f5b8c8;cursor:pointer;" onclick="openModal(\'제조 생산관리 물류 총괄\')">' +
-            '<div style="font-size:11px;font-weight:700;color:#7a1a35;">제조공장</div>' +
-            '<div style="font-size:9px;color:#9e2848;opacity:0.85;">Manufacture Division</div>' +
-          '</div>' +
-          '<div style="background:#fff;padding:6px 9px;border:1.5px solid #f5b8c8;border-top:none;margin-bottom:6px;">' + mfgStaff + '</div>' +
-          '<div style="display:flex;gap:6px;margin-bottom:6px;">' +
-            '<div style="flex:1;">' + makeDeptCard('생산관리 MM') + '</div>' +
-            '<div style="flex:1;">' + makeDeptCard('구매팀 PU') + '</div>' +
-          '</div>' +
-          '<div style="display:flex;gap:6px;">' +
-            '<div style="flex:1;">' + makeDeptCard('제조팀 PD') + '</div>' +
-            '<div style="flex:1;">' + makeDeptCard('물류팀') + '</div>' +
-            '<div style="flex:1;">' + makeDeptCard('품질보증') + '</div>' +
-          '</div>' +
-        '</div>' +
-      '</div>' +
-    '</div>';
-
-    document.getElementById('campusContainer').innerHTML = gangnamHTML + gwaнgyoHTML + seongnamHTML;
-
-    // 각 부서 직원 렌더링
-    Object.keys(DEPT_CONFIG).forEach(function(key) {
-      var cfg = DEPT_CONFIG[key];
-      var el = document.getElementById(keyToId(key));
-      if (!el) return;
-      var members = getMembersByKey(data, key);
-      el.innerHTML = makeStaffHTML(members, cfg.leaders || []);
+    result.push({
+      no:     noNum,
+      name:   name,
+      rank:   rank,
+      office: office,
+      ext:    ext,
+      phone:  phone,
+      dept:   currentDept,
+      rr:     finalRR
     });
+  }
 
-    // 제조공장 상단 홍순기 렌더링
-    var mfgTop = document.getElementById(keyToId('제조/생산관리/물류') + '-top');
-    if (mfgTop) {
-      var mfgMembers = getMembersByKey(data, '제조/생산관리/물류');
-      mfgTop.innerHTML = makeStaffHTML(mfgMembers, ['홍순기']);
-    }
-  });
+  return ContentService
+    .createTextOutput(JSON.stringify(result))
+    .setMimeType(ContentService.MimeType.JSON);
 }
-
-function openModal(key) {
-  var cfg = DEPT_CONFIG[key];
-  if (!cfg) return;
-  var overlay = document.getElementById('modalOverlay');
-  document.getElementById('modalTitle').textContent = cfg.kr + '  ·  ' + cfg.en;
-  document.getElementById('modalContent').innerHTML = '<div class="loading">데이터 불러오는 중...</div>';
-  overlay.classList.add('show');
-
-  loadData().then(function(data) {
-    // 기본 멤버
-    var members = data.filter(function(m) {
-      return matchDept(m.dept, key);
-    }).filter(function(m) {
-      return (cfg.exclude || []).indexOf(m.name) === -1;
-    });
-
-    // showInPopup 추가 (품질의 홍순기 등)
-    if (cfg.showInPopup && cfg.showInPopup.length) {
-      cfg.showInPopup.forEach(function(name) {
-        if (!members.find(function(m){ return m.name === name; })) {
-          var extra = data.find(function(m){ return m.name === name; });
-          if (extra) members.unshift(extra);
-        }
-      });
-    }
-
-    if (!members.length) {
-      document.getElementById('modalContent').innerHTML = '<div class="loading">데이터가 없습니다.</div>';
-      return;
-    }
-
-    document.getElementById('modalContent').innerHTML = members.map(function(m) {
-      var rrLines = String(m.rr||'').trim().split('\n').filter(Boolean);
-      return '<div class="modal-person">' +
-        '<div class="modal-person-header">' +
-          '<span class="modal-person-name">' + (m.name||'') + '</span>' +
-          '<span class="modal-person-rank">' + (m.phone||'-') + '</span>' +
-        '</div>' +
-        '<div class="modal-info-row"><span class="modal-info-label">직급</span><span class="modal-info-value">' + (m.rank||'-') + '</span></div>' +
-        '<div class="modal-info-row"><span class="modal-info-label">연락처</span><span class="modal-info-value">' + (m.phone||'-') + '</span></div>' +
-        '<div class="modal-info-row"><span class="modal-info-label">내선</span><span class="modal-info-value">' + (m.ext||'-') + '</span></div>' +
-        (rrLines.length ? '<div class="modal-rr"><div class="modal-rr-label">R&R (담당 업무)</div>' +
-          rrLines.map(function(l){ return '<div>• ' + l.replace(/^[-•]\s*/,'') + '</div>'; }).join('') +
-        '</div>' : '') +
-      '</div>';
-    }).join('');
-  });
-}
-
-function closeModal(e) { if (e.target === document.getElementById('modalOverlay')) closeModalDirect(); }
-function closeModalDirect() { document.getElementById('modalOverlay').classList.remove('show'); }
-document.addEventListener('keydown', function(e) { if(e.key==='Escape') closeModalDirect(); });
-
-renderOrgChart();
-</script>
-</body>
-</html>
