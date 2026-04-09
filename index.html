@@ -67,10 +67,9 @@ body { padding: 28px 20px 40px; font-family: -apple-system, 'Segoe UI', sans-ser
 </style>
 </head>
 <body>
-
-<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
   <div class="modal">
-    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    <button class="modal-close" onclick="closeModal()">✕</button>
     <div class="modal-dept-title" id="modalTitle"></div>
     <div id="modalContent"><div class="loading">불러오는 중...</div></div>
   </div>
@@ -112,217 +111,185 @@ body { padding: 28px 20px 40px; font-family: -apple-system, 'Segoe UI', sans-ser
 </div>
 
 <script>
-var API_URL = 'https://script.google.com/macros/s/AKfycbwp7lVz8Wu5ngszztKGQ8Z2j_kywrD7D6kc8usalW0axd0aKCfmfSabJsKTnMVIw-vzrg/exec';
+var API = 'https://script.google.com/macros/s/AKfycbwp7lVz8Wu5ngszztKGQ8Z2j_kywrD7D6kc8usalW0axd0aKCfmfSabJsKTnMVIw-vzrg/exec';
 
-var DEPT_CONFIG = {
-  '전략 기획':                  { kr:'전략', en:'Strategic', theme:'theme-strategic', leaders:['노서희'], exclude:[] },
-  '경영지원 인사 / 총무 전반':  { kr:'인사', en:'Human Resource', theme:'theme-hr', leaders:['김석원'], exclude:[] },
-  '경영지원 재무 / 회계 전반':  { kr:'재무', en:'Finance', theme:'theme-finance', leaders:['고대진'], exclude:[] },
-  'IDENEL':                     { kr:'브랜드 매니지먼트팀', en:'Brand Management', theme:'theme-brand', leaders:['최희정'], exclude:[] },
-  '운영지원':                   { kr:'운영지원', en:'Operations Support', theme:'theme-ops', leaders:['김아리'], exclude:[] },
-  'SALES 1팀':                  { kr:'SALES 1팀', en:'Sales Team 1', theme:'theme-sales', leaders:['김아리'], exclude:[] },
-  'SALES 2팀':                  { kr:'SALES 2팀', en:'Sales Team 2', theme:'theme-sales', leaders:['임다정'], exclude:[] },
-  'SALES 3팀':                  { kr:'SALES 3팀', en:'Sales Team 3', theme:'theme-sales', leaders:['베카'], exclude:[] },  '신소재 개발팀 BIO CENTER':   { kr:'신소재 개발 Bio Center', en:'New Material Development', theme:'theme-bio', leaders:['박가민'], exclude:[] },
-  '합성':                       { kr:'알텀공장', en:'Altum Plant', theme:'theme-altum', leaders:[], exclude:[] },
-  '제형연구':                   { kr:'제형연구', en:'Research & Development', theme:'theme-rnd', leaders:['김아리'], exclude:['윤홍건'] },
-  '제조 생산관리 물류 총괄':    { kr:'제조공장', en:'Manufacture Division', theme:'theme-mfg', leaders:['홍순기'], onlyLeader:true },
-  '생산관리 MM':                { kr:'생산관리', en:'Manufacture Management', theme:'theme-mgmt', leaders:[], exclude:['고정인','김윤서'] },
-  '구매팀 PU':                  { kr:'구매', en:'Purchasing', theme:'theme-pur', leaders:[], exclude:[] },
-  '제조팀':                     { kr:'제조', en:'Production', theme:'theme-prod', leaders:['정의찬'], exclude:[] },
-  '물류팀':                     { kr:'물류', en:'Logistics', theme:'theme-log', leaders:[], exclude:[] },
-  '품질보증':                   { kr:'품질', en:'Quality Assurance', theme:'theme-qa', leaders:['정언식'], exclude:['홍순기'], showInPopup:['홍순기'] },
+// dept 첫줄 추출 (실제 \n 줄바꿈 처리)
+function deptFirst(dept) {
+  return String(dept || '').trim().split('\n')[0].trim();
+}
+
+// 인사/재무 구분용 이름 목록
+var HR = ['김석원','이아라'];
+var FI = ['고대진','김나리'];
+
+// 부서 설정 - key는 실제 dept 첫줄과 일치
+var DC = {
+  '전략 기획':           {kr:'전략',           en:'Strategic',            th:'theme-strategic', L:['노서희'],   X:[]},
+  'HR':                  {kr:'인사',           en:'Human Resource',        th:'theme-hr',        L:['김석원'],   X:[]},
+  'FI':                  {kr:'재무',           en:'Finance',               th:'theme-finance',   L:['고대진'],   X:[]},
+  'IDENEL':              {kr:'브랜드 매니지먼트팀', en:'Brand Management',  th:'theme-brand',     L:['최희정'],   X:[]},
+  '운영지원':            {kr:'운영지원',        en:'Operations Support',    th:'theme-ops',       L:['김아리'],   X:[]},
+  'SALES 1팀':           {kr:'SALES 1팀',      en:'Sales Team 1',          th:'theme-sales',     L:['김아리'],   X:[]},
+  'SALES 2팀':           {kr:'SALES 2팀',      en:'Sales Team 2',          th:'theme-sales',     L:['임다정'],   X:[]},
+  'SALES 3팀':           {kr:'SALES 3팀',      en:'Sales Team 3',          th:'theme-sales',     L:['베카'],     X:[]},
+  '신소재 개발팀':       {kr:'신소재 개발 Bio Center', en:'New Material Development', th:'theme-bio', L:['박가민'], X:[]},
+  '합성':                {kr:'알텀공장',        en:'Altum Plant',           th:'theme-altum',     L:[],           X:[]},
+  '제형연구':            {kr:'제형연구',        en:'Research & Development',th:'theme-rnd',       L:['김아리'],   X:['윤홍건']},
+  'MFG':                 {kr:'제조공장',        en:'Manufacture Division',  th:'theme-mfg',       L:['홍순기'],   X:[], onlyLeader:true},
+  '생산관리':            {kr:'생산관리',        en:'Manufacture Management',th:'theme-mgmt',      L:[],           X:['고정인','김윤서']},
+  '구매팀':              {kr:'구매',           en:'Purchasing',             th:'theme-pur',       L:[],           X:[]},
+  '제조팀':              {kr:'제조',           en:'Production',             th:'theme-prod',      L:['정의찬'],   X:[]},
+  '물류팀':              {kr:'물류',           en:'Logistics',              th:'theme-log',       L:[],           X:[]},
+  '품질보증':            {kr:'품질',           en:'Quality Assurance',      th:'theme-qa',        L:['정언식'],   X:['홍순기'], popup:['홍순기']},
 };
 
-// dept 값을 정규화 (줄바꿈, 공백 통일)
-function normDept(str) {
-  return String(str || '').trim().replace(/\n/g,' ').replace(/\s+/g,' ');
+// 멤버가 해당 dept key에 속하는지 확인
+function belongs(m, key) {
+  var f = deptFirst(m.dept);
+  if (key === 'HR')  return f === '경영지원' && HR.indexOf(m.name) > -1;
+  if (key === 'FI')  return f === '경영지원' && FI.indexOf(m.name) > -1;
+  if (key === 'MFG') return f === '제조/생산관리/물류';
+  return f === key;
 }
 
-// 멤버의 dept가 configKey에 매칭되는지
-function matchDept(memberDept, configKey) {
-  var d = normDept(memberDept);
-  var k = normDept(configKey);
-  return d === k;
+function getMembers(data, key) {
+  var cfg = DC[key];
+  return data.filter(function(m) { return belongs(m, key); })
+    .filter(function(m) {
+      if (cfg.onlyLeader) return cfg.L.indexOf(m.name) > -1;
+      return cfg.X.indexOf(m.name) === -1;
+    });
 }
 
-var sheetData = null;
-
-function loadData() {
-  if (sheetData) return Promise.resolve(sheetData);
-  return fetch(API_URL)
-    .then(function(r){ return r.json(); })
-    .then(function(d){ sheetData = d; return d; })
-    .catch(function(){ sheetData = []; return []; });
-}
-
-function getMembersByKey(data, key) {
-  var cfg = DEPT_CONFIG[key];
-  if (!cfg) return [];
-  return data.filter(function(m) {
-    return matchDept(m.dept, key, m.name);
-  }).filter(function(m) {
-    if (cfg.onlyLeader) return cfg.leaders.indexOf(m.name) > -1;
-    return (cfg.exclude || []).indexOf(m.name) === -1;
-  });
-}
-
-function makeStaffHTML(members, leaders) {
+function staffHTML(members, leaders) {
   if (!members.length) return '<div style="font-size:10px;color:#bbb;text-align:center;padding:4px;">-</div>';
   return members.map(function(m) {
-    var isLeader = leaders.indexOf(m.name) > -1;
-    return '<div class="staff-item"><span class="staff-name">' + m.name + '</span><span class="staff-rank">_' + (m.rank||'') + '</span>' + (isLeader ? '<span class="staff-star">⭐</span>' : '') + '</div>';
+    var isL = leaders.indexOf(m.name) > -1;
+    return '<div class="staff-item"><span class="staff-name">'+m.name+'</span><span class="staff-rank">_'+(m.rank||'')+'</span>'+(isL?'<span class="staff-star">⭐</span>':'')+'</div>';
   }).join('');
 }
 
-function keyToId(key) {
-  return 'staff-' + key.replace(/[^a-zA-Z0-9가-힣]/g, '_');
+function kid(key) { return 'sd-'+key.replace(/[^a-zA-Z0-9가-힣]/g,'_'); }
+
+function card(key) {
+  var c = DC[key];
+  if (!c) return '';
+  return '<div class="dept-card '+c.th+'" onclick="openM(\''+key.replace(/'/g,"\\'")+'\')">'
+    +'<div class="dept-head"><div class="dept-kr">'+c.kr+'</div><div class="dept-en">'+c.en+'</div></div>'
+    +'<div class="dept-staff" id="'+kid(key)+'"><div style="font-size:10px;color:#bbb;text-align:center;">-</div></div>'
+    +'</div>';
 }
 
-function makeDeptCard(key) {
-  var cfg = DEPT_CONFIG[key];
-  if (!cfg) return '';
-  return '<div class="dept-card ' + cfg.theme + '" onclick="openModal(\'' + key.replace(/'/g,"\\'") + '\')">' +
-    '<div class="dept-head"><div class="dept-kr">' + cfg.kr + '</div><div class="dept-en">' + cfg.en + '</div></div>' +
-    '<div class="dept-staff" id="' + keyToId(key) + '"><div style="font-size:10px;color:#bbb;text-align:center;">로딩중</div></div>' +
-    '</div>';
+var cache = null;
+function load() {
+  if (cache) return Promise.resolve(cache);
+  return fetch(API).then(function(r){return r.json();}).then(function(d){cache=d;return d;}).catch(function(){cache=[];return[];});
 }
 
-function renderOrgChart() {
-  loadData().then(function(data) {
+function render() {
+  load().then(function(data) {
+    var g = '<div class="campus campus-gangnam" style="flex:2.2;">'
+      +'<div class="campus-header"><div class="campus-name">강남 CAMPUS</div><div class="campus-leader">이소형 대표</div></div>'
+      +'<div style="display:flex;gap:8px;margin-bottom:8px;">'
+        +'<div style="flex:2;">'+card('전략 기획')+'</div>'
+        +'<div style="display:flex;flex-direction:column;gap:8px;flex:1;">'+card('HR')+card('FI')+'</div>'
+      +'</div>'
+      +'<div style="display:flex;gap:8px;margin-bottom:8px;">'
+        +'<div style="flex:1.5;">'+card('IDENEL')+'</div>'
+        +'<div style="flex:1;">'+card('운영지원')+'</div>'
+      +'</div>'
+      +'<div style="display:flex;gap:8px;">'
+        +'<div style="flex:1;">'+card('SALES 1팀')+'</div>'
+        +'<div style="flex:1;">'+card('SALES 2팀')+'</div>'
+        +'<div style="flex:1;">'+card('SALES 3팀')+'</div>'
+      +'</div>'
+    +'</div>';
 
-    // 강남
-    var gangnamHTML = '<div class="campus campus-gangnam" style="flex:2.2;">' +
-      '<div class="campus-header"><div class="campus-name">강남 CAMPUS</div><div class="campus-leader">이소형 대표</div></div>' +
-      '<div style="display:flex;gap:8px;margin-bottom:8px;">' +
-        '<div style="flex:2;">' + makeDeptCard('전략 기획') + '</div>' +
-        '<div style="display:flex;flex-direction:column;gap:8px;flex:1;">' +
-          makeDeptCard('경영지원 인사 / 총무 전반') +
-          makeDeptCard('경영지원 재무 / 회계 전반') +
-        '</div>' +
-      '</div>' +
-      '<div style="display:flex;gap:8px;margin-bottom:8px;">' +
-        '<div style="flex:1.5;">' + makeDeptCard('IDENEL') + '</div>' +
-        '<div style="flex:1;">' + makeDeptCard('운영지원') + '</div>' +
-      '</div>' +
-      '<div style="display:flex;gap:8px;">' +
-        '<div style="flex:1;">' + makeDeptCard('SALES 1팀') + '</div>' +
-        '<div style="flex:1;">' + makeDeptCard('SALES 2팀') + '</div>' +
-        '<div style="flex:1;">' + makeDeptCard('SALES 3팀') + '</div>' +
-      '</div>' +
-    '</div>';
+    var gw = '<div class="campus campus-gwangyo" style="flex:1;">'
+      +'<div class="campus-header"><div class="campus-name">광교 CAMPUS</div><div class="campus-leader">박가민 부장 (센터장)</div></div>'
+      +'<div style="display:flex;flex-direction:column;gap:8px;">'+card('신소재 개발팀')+card('합성')+'</div>'
+    +'</div>';
 
-    // 광교
-    var gwaнgyoHTML = '<div class="campus campus-gwangyo" style="flex:1;">' +
-      '<div class="campus-header"><div class="campus-name">광교 CAMPUS</div><div class="campus-leader">박가민 부장 (센터장)</div></div>' +
-      '<div style="display:flex;flex-direction:column;gap:8px;">' +
-        makeDeptCard('신소재 개발팀 BIO CENTER') +
-        makeDeptCard('알텀공장') +
-      '</div>' +
-    '</div>';
+    var mfg = getMembers(data,'MFG');
+    var mfgS = mfg.map(function(m){return '<div class="staff-item"><span class="staff-name">'+m.name+'</span><span class="staff-rank">_'+(m.rank||'')+'</span><span class="staff-star">⭐</span></div>';}).join('');
 
-    // 성남 - 제조공장 헤더
-    var mfgMembers = getMembersByKey(data, '제조 생산관리 물류 총괄');
-    var mfgStaff = mfgMembers.map(function(m) {
-      return '<div class="staff-item"><span class="staff-name">' + m.name + '</span><span class="staff-rank">_' + (m.rank||'') + '</span><span class="staff-star">⭐</span></div>';
-    }).join('');
+    var s = '<div class="campus campus-seongnam" style="flex:1.6;">'
+      +'<div class="campus-header"><div class="campus-name">성남 CAMPUS</div><div class="campus-leader">김아리 부대표</div></div>'
+      +'<div style="display:flex;gap:8px;">'
+        +'<div style="flex:1;">'+card('제형연구')+'</div>'
+        +'<div style="flex:2;">'
+          +'<div style="background:#f5b8c8;border-radius:10px 10px 0 0;padding:7px 10px;text-align:center;border:1.5px solid #f5b8c8;cursor:pointer;" onclick="openM(\'MFG\')">'
+            +'<div style="font-size:11px;font-weight:700;color:#7a1a35;">제조공장</div>'
+            +'<div style="font-size:9px;color:#9e2848;opacity:0.85;">Manufacture Division</div>'
+          +'</div>'
+          +'<div style="background:#fff;padding:6px 9px;border:1.5px solid #f5b8c8;border-top:none;margin-bottom:6px;">'+mfgS+'</div>'
+          +'<div style="display:flex;gap:6px;margin-bottom:6px;">'
+            +'<div style="flex:1;">'+card('생산관리')+'</div>'
+            +'<div style="flex:1;">'+card('구매팀')+'</div>'
+          +'</div>'
+          +'<div style="display:flex;gap:6px;">'
+            +'<div style="flex:1;">'+card('제조팀')+'</div>'
+            +'<div style="flex:1;">'+card('물류팀')+'</div>'
+            +'<div style="flex:1;">'+card('품질보증')+'</div>'
+          +'</div>'
+        +'</div>'
+      +'</div>'
+    +'</div>';
 
-    var seongnamHTML = '<div class="campus campus-seongnam" style="flex:1.6;">' +
-      '<div class="campus-header"><div class="campus-name">성남 CAMPUS</div><div class="campus-leader">김아리 부대표</div></div>' +
-      '<div style="display:flex;gap:8px;">' +
-        '<div style="flex:1;">' + makeDeptCard('제형연구') + '</div>' +
-        '<div style="flex:2;">' +
-          '<div style="background:#f5b8c8;border-radius:10px 10px 0 0;padding:7px 10px;text-align:center;border:1.5px solid #f5b8c8;cursor:pointer;" onclick="openModal(\'제조 생산관리 물류 총괄\')">' +
-            '<div style="font-size:11px;font-weight:700;color:#7a1a35;">제조공장</div>' +
-            '<div style="font-size:9px;color:#9e2848;opacity:0.85;">Manufacture Division</div>' +
-          '</div>' +
-          '<div style="background:#fff;padding:6px 9px;border:1.5px solid #f5b8c8;border-top:none;margin-bottom:6px;">' + mfgStaff + '</div>' +
-          '<div style="display:flex;gap:6px;margin-bottom:6px;">' +
-            '<div style="flex:1;">' + makeDeptCard('생산관리 MM') + '</div>' +
-            '<div style="flex:1;">' + makeDeptCard('구매팀 PU') + '</div>' +
-          '</div>' +
-          '<div style="display:flex;gap:6px;">' +
-            '<div style="flex:1;">' + makeDeptCard('제조팀 PD') + '</div>' +
-            '<div style="flex:1;">' + makeDeptCard('물류팀') + '</div>' +
-            '<div style="flex:1;">' + makeDeptCard('품질보증') + '</div>' +
-          '</div>' +
-        '</div>' +
-      '</div>' +
-    '</div>';
+    document.getElementById('campusContainer').innerHTML = g+gw+s;
 
-    document.getElementById('campusContainer').innerHTML = gangnamHTML + gwaнgyoHTML + seongnamHTML;
-
-    // 각 부서 직원 렌더링
-    Object.keys(DEPT_CONFIG).forEach(function(key) {
-      var cfg = DEPT_CONFIG[key];
-      var el = document.getElementById(keyToId(key));
+    Object.keys(DC).forEach(function(key) {
+      var el = document.getElementById(kid(key));
       if (!el) return;
-      var members = getMembersByKey(data, key);
-      el.innerHTML = makeStaffHTML(members, cfg.leaders || []);
+      el.innerHTML = staffHTML(getMembers(data,key), DC[key].L);
     });
-
-    // 제조공장 상단 홍순기 렌더링
-    var mfgTop = document.getElementById(keyToId('제조/생산관리/물류') + '-top');
-    if (mfgTop) {
-      var mfgMembers = getMembersByKey(data, '제조/생산관리/물류');
-      mfgTop.innerHTML = makeStaffHTML(mfgMembers, ['홍순기']);
-    }
   });
 }
 
-function openModal(key) {
-  var cfg = DEPT_CONFIG[key];
+function openM(key) {
+  var cfg = DC[key];
   if (!cfg) return;
-  var overlay = document.getElementById('modalOverlay');
-  document.getElementById('modalTitle').textContent = cfg.kr + '  ·  ' + cfg.en;
-  document.getElementById('modalContent').innerHTML = '<div class="loading">데이터 불러오는 중...</div>';
-  overlay.classList.add('show');
+  document.getElementById('modalTitle').textContent = cfg.kr+'  ·  '+cfg.en;
+  document.getElementById('modalContent').innerHTML = '<div class="loading">불러오는 중...</div>';
+  document.getElementById('modalOverlay').classList.add('show');
 
-  loadData().then(function(data) {
-    // 기본 멤버
-    var members = data.filter(function(m) {
-      return matchDept(m.dept, key, m.name);
-    }).filter(function(m) {
-      return (cfg.exclude || []).indexOf(m.name) === -1;
-    });
+  load().then(function(data) {
+    var members = data.filter(function(m){ return belongs(m,key); })
+      .filter(function(m){ return cfg.X.indexOf(m.name)===-1; });
 
-    // showInPopup 추가 (품질의 홍순기 등)
-    if (cfg.showInPopup && cfg.showInPopup.length) {
-      cfg.showInPopup.forEach(function(name) {
-        if (!members.find(function(m){ return m.name === name; })) {
-          var extra = data.find(function(m){ return m.name === name; });
-          if (extra) members.unshift(extra);
+    if (cfg.popup) {
+      cfg.popup.forEach(function(name) {
+        if (!members.find(function(m){return m.name===name;})) {
+          var ex = data.find(function(m){return m.name===name;});
+          if (ex) members.unshift(ex);
         }
       });
     }
 
     if (!members.length) {
-      document.getElementById('modalContent').innerHTML = '<div class="loading">데이터가 없습니다.</div>';
+      document.getElementById('modalContent').innerHTML='<div class="loading">데이터가 없습니다.</div>';
       return;
     }
 
     document.getElementById('modalContent').innerHTML = members.map(function(m) {
-      var rrLines = String(m.rr||'').trim().split('\n').filter(Boolean);
-      return '<div class="modal-person">' +
-        '<div class="modal-person-header">' +
-          '<span class="modal-person-name">' + (m.name||'') + '</span>' +
-          '<span class="modal-person-rank">' + (m.phone||'-') + '</span>' +
-        '</div>' +
-        '<div class="modal-info-row"><span class="modal-info-label">직급</span><span class="modal-info-value">' + (m.rank||'-') + '</span></div>' +
-        '<div class="modal-info-row"><span class="modal-info-label">연락처</span><span class="modal-info-value">' + (m.phone||'-') + '</span></div>' +
-        '<div class="modal-info-row"><span class="modal-info-label">내선</span><span class="modal-info-value">' + (m.ext||'-') + '</span></div>' +
-        (rrLines.length ? '<div class="modal-rr"><div class="modal-rr-label">R&R (담당 업무)</div>' +
-          rrLines.map(function(l){ return '<div>• ' + l.replace(/^[-•]\s*/,'') + '</div>'; }).join('') +
-        '</div>' : '') +
-      '</div>';
+      var rr = String(m.rr||'').trim().split('\n').filter(Boolean);
+      return '<div class="modal-person">'
+        +'<div class="modal-person-header">'
+          +'<span class="modal-person-name">'+(m.name||'')+'</span>'
+          +'<span class="modal-person-rank">'+(m.phone||'-')+'</span>'
+        +'</div>'
+        +'<div class="modal-info-row"><span class="modal-info-label">직급</span><span class="modal-info-value">'+(m.rank||'-')+'</span></div>'
+        +'<div class="modal-info-row"><span class="modal-info-label">연락처</span><span class="modal-info-value">'+(m.phone||'-')+'</span></div>'
+        +'<div class="modal-info-row"><span class="modal-info-label">내선</span><span class="modal-info-value">'+(m.ext||'-')+'</span></div>'
+        +(rr.length?'<div class="modal-rr"><div class="modal-rr-label">R&R (담당 업무)</div>'+rr.map(function(l){return '<div>• '+l.replace(/^[-•]\s*/,'')+'</div>';}).join('')+'</div>':'')
+      +'</div>';
     }).join('');
   });
 }
 
-function closeModal(e) { if (e.target === document.getElementById('modalOverlay')) closeModalDirect(); }
-function closeModalDirect() { document.getElementById('modalOverlay').classList.remove('show'); }
-document.addEventListener('keydown', function(e) { if(e.key==='Escape') closeModalDirect(); });
-
-renderOrgChart();
+function closeModal() { document.getElementById('modalOverlay').classList.remove('show'); }
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
+render();
 </script>
 </body>
 </html>
