@@ -159,7 +159,7 @@ function getMembersByKey(data, key) {
   var cfg = DEPT_CONFIG[key];
   if (!cfg) return [];
   return data.filter(function(m) {
-    return matchDept(m.dept, key);
+    return matchDept(m.dept, key, m.name);
   }).filter(function(m) {
     if (cfg.onlyLeader) return cfg.leaders.indexOf(m.name) > -1;
     return (cfg.exclude || []).indexOf(m.name) === -1;
@@ -280,7 +280,7 @@ function openModal(key) {
   loadData().then(function(data) {
     // 기본 멤버
     var members = data.filter(function(m) {
-      return matchDept(m.dept, key);
+      return matchDept(m.dept, key, m.name);
     }).filter(function(m) {
       return (cfg.exclude || []).indexOf(m.name) === -1;
     });
