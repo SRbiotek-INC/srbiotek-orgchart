@@ -279,16 +279,15 @@ function openM(key) {
 
     document.getElementById('modalContent').innerHTML = members.map(function(m) {
       var rr = String(m.rr||'').trim().split('\n').filter(Boolean);
-      // 사무실 번호 표시 (없으면 핸드폰 번호 fallback)
-      var officeDisplay = m.office || m.phone || '-';
+      var officeDisplay = m.office || '-';
       return '<div class="modal-person">'
         +'<div class="modal-person-header">'
           +'<span class="modal-person-name">'+(m.name||'')+'</span>'
-          +'<span class="modal-person-rank">'+officeDisplay+'</span>'  // ← 사무실 번호
+          +(m.office ? '<span class="modal-person-rank">'+m.office+'</span>' : '')
         +'</div>'
         +'<div class="modal-info-row"><span class="modal-info-label">직급</span><span class="modal-info-value">'+(m.rank||'-')+'</span></div>'
-        +'<div class="modal-info-row"><span class="modal-info-label">연락처</span><span class="modal-info-value">'+officeDisplay+'</span></div>'  // ← 사무실 번호
-        +'<div class="modal-info-row"><span class="modal-info-label">핸드폰</span><span class="modal-info-value">'+(m.phone||'-')+'</span></div>'  // ← 핸드폰은 별도 행
+        +'<div class="modal-info-row"><span class="modal-info-label">사무실</span><span class="modal-info-value">'+officeDisplay+'</span></div>'
+        +'<div class="modal-info-row"><span class="modal-info-label">핸드폰</span><span class="modal-info-value">'+(m.phone||'-')+'</span></div>'
         +'<div class="modal-info-row"><span class="modal-info-label">내선</span><span class="modal-info-value">'+(m.ext||'-')+'</span></div>'
         +(rr.length?'<div class="modal-rr"><div class="modal-rr-label">R&R (담당 업무)</div>'+rr.map(function(l){return '<div>• '+l.replace(/^[-•]\s*/,'')+'</div>';}).join('')+'</div>':'')
       +'</div>';
