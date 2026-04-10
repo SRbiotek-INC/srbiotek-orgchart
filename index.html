@@ -283,7 +283,7 @@ function openM(key) {
       return '<div class="modal-person">'
         +'<div class="modal-person-header">'
           +'<span class="modal-person-name">'+(m.name||'')+'</span>'
-          +(m.office ? '<span class="modal-person-rank">'+m.office+'</span>' : '')
+          +'<span class="modal-person-rank">'+(m.phone||'-')+'</span>'
         +'</div>'
         +'<div class="modal-info-row"><span class="modal-info-label">직급</span><span class="modal-info-value">'+(m.rank||'-')+'</span></div>'
         +'<div class="modal-info-row"><span class="modal-info-label">사무실</span><span class="modal-info-value">'+officeDisplay+'</span></div>'
