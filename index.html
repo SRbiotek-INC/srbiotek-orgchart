@@ -113,24 +113,25 @@ body { padding: 28px 20px 40px; font-family: -apple-system, 'Segoe UI', sans-ser
 <script>
 var API = 'https://script.google.com/macros/s/AKfycbwp7lVz8Wu5ngszztKGQ8Z2j_kywrD7D6kc8usalW0axd0aKCfmfSabJsKTnMVIw-vzrg/exec';
 
+// dept 첫줄 추출 (실제 \n 줄바꿈 처리)
 function deptFirst(dept) {
   return String(dept || '').trim().split('\n')[0].trim();
 }
 
+// 인사/재무 구분용 이름 목록
 var HR = ['김석원','이아라'];
 var FI = ['고대진','김나리'];
 
+// 부서 설정 - key는 실제 dept 첫줄과 일치
 var DC = {
   '전략 기획':           {kr:'전략',           en:'Strategic',            th:'theme-strategic', L:['노서희'],   X:[]},
   'HR':                  {kr:'인사',           en:'Human Resource',        th:'theme-hr',        L:['김석원'],   X:[]},
   'FI':                  {kr:'재무',           en:'Finance',               th:'theme-finance',   L:['고대진'],   X:[]},
   'IDENEL':              {kr:'브랜드 매니지먼트팀', en:'Brand Management',  th:'theme-brand',     L:['최희정'],   X:[]},
   '운영지원':            {kr:'운영지원',        en:'Operations Support',    th:'theme-ops',       L:['김아리'],   X:[]},
-  'SALES 1팀':           {kr:'SALES 1팀',      en:'Sales Team 1',          th:'theme-sales',     L:['김아리'],   X:[]},
-  'SALES 2팀':           {kr:'SALES 2팀',      en:'Sales Team 2',          th:'theme-sales',     L:['임다정'],   X:[]},
+  'SALES 1팀':           {kr:'SALES 1팀',      en:'Sales Team 1',          th:'theme-sales',     L:['김아리'],   X:['박상은']},  'SALES 2팀':           {kr:'SALES 2팀',      en:'Sales Team 2',          th:'theme-sales',     L:['임다정'],   X:[]},
   'SALES 3팀':           {kr:'SALES 3팀',      en:'Sales Team 3',          th:'theme-sales',     L:['베카'],     X:[]},
-  '신소재 개발팀':       {kr:'신소재 개발 Bio Center', en:'New Material Development', th:'theme-bio', L:['박가민'], X:[]},
-  '합성':                {kr:'알텀공장',        en:'Altum Plant',           th:'theme-altum',     L:[],           X:[]},
+  '신소재 개발팀':       {kr:'신소재 개발 Bio Center', en:'New Material Development', th:'theme-bio', L:['박가민'], X:[]},  '합성':                {kr:'알텀공장',        en:'Altum Plant',           th:'theme-altum',     L:[],           X:[]},
   '제형연구':            {kr:'제형연구',        en:'Research & Development',th:'theme-rnd',       L:['김아리'],   X:['윤홍건']},
   'MFG':                 {kr:'제조공장',        en:'Manufacture Division',  th:'theme-mfg',       L:['홍순기'],   X:[], onlyLeader:true},
   '생산관리':            {kr:'생산관리',        en:'Manufacture Management',th:'theme-mgmt',      L:[],           X:['고정인','김윤서']},
@@ -140,6 +141,7 @@ var DC = {
   '품질보증':            {kr:'품질',           en:'Quality Assurance',      th:'theme-qa',        L:['정언식'],   X:['홍순기'], popup:['홍순기']},
 };
 
+// 멤버가 해당 dept key에 속하는지 확인
 function belongs(m, key) {
   var f = deptFirst(m.dept);
   if (key === 'HR')  return f === '경영지원' && HR.indexOf(m.name) > -1;
@@ -156,6 +158,7 @@ function getMembers(data, key) {
       return cfg.X.indexOf(m.name) === -1;
     });
 
+  // 김아리님 SALES 1팀 / 운영지원 팀장 강제 추가
   if (key === 'SALES 1팀' || key === '운영지원') {
     var hasKimAri = members.find(function(m){ return m.name === '김아리'; });
     if (!hasKimAri) {
@@ -279,15 +282,13 @@ function openM(key) {
 
     document.getElementById('modalContent').innerHTML = members.map(function(m) {
       var rr = String(m.rr||'').trim().split('\n').filter(Boolean);
-      var officeDisplay = m.office || '-';
       return '<div class="modal-person">'
         +'<div class="modal-person-header">'
           +'<span class="modal-person-name">'+(m.name||'')+'</span>'
           +'<span class="modal-person-rank">'+(m.phone||'-')+'</span>'
         +'</div>'
         +'<div class="modal-info-row"><span class="modal-info-label">직급</span><span class="modal-info-value">'+(m.rank||'-')+'</span></div>'
-        +'<div class="modal-info-row"><span class="modal-info-label">사무실</span><span class="modal-info-value">'+officeDisplay+'</span></div>'
-        +'<div class="modal-info-row"><span class="modal-info-label">핸드폰</span><span class="modal-info-value">'+(m.phone||'-')+'</span></div>'
+        +'<div class="modal-info-row"><span class="modal-info-label">연락처</span><span class="modal-info-value">'+(m.phone||'-')+'</span></div>'
         +'<div class="modal-info-row"><span class="modal-info-label">내선</span><span class="modal-info-value">'+(m.ext||'-')+'</span></div>'
         +(rr.length?'<div class="modal-rr"><div class="modal-rr-label">R&R (담당 업무)</div>'+rr.map(function(l){return '<div>• '+l.replace(/^[-•]\s*/,'')+'</div>';}).join('')+'</div>':'')
       +'</div>';
